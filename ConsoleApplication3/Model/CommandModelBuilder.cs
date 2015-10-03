@@ -11,7 +11,7 @@ namespace ConsoleApplication3.Model
         {
             Config = config;
             Name = name;
-            Options = new Dictionary<string, IOptionModel<TResult>>(StringComparer.Ordinal);
+            Options = new Dictionary<string, IOptionModel<TResult>>(config.StringComparer);
         }
 
         private ApplicationConfiguration<TResult> Config { get; }

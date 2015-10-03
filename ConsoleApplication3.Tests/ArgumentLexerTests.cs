@@ -1,7 +1,6 @@
 ﻿using System;
 using ConsoleApplication3.Parsing;
 using Xunit;
-using static ConsoleApplication3.Parsing.ArgumentToken;
 
 namespace ConsoleApplication3.Tests
 {
@@ -68,6 +67,16 @@ namespace ConsoleApplication3.Tests
         private void Lex(string args, params ArgumentToken[] expected)
         {
             Assert.Equal(expected, Lexer.Lex(args.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries)));
+        }
+
+        private static ArgumentToken Literal(string value)
+        {
+            return ArgumentToken.Literal(Config.StringComparer, value);
+        }
+
+        private static ArgumentToken Option(string modifier, string name)
+        {
+            return ArgumentToken.Option(Config.StringComparer, modifier, name);
         }
     }
 }

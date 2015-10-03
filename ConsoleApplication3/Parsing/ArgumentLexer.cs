@@ -26,7 +26,7 @@ namespace ConsoleApplication3.Parsing
             {
                 if (escapeOptions)
                 {
-                    tokens.Add(ArgumentToken.Literal(arg));
+                    tokens.Add(ArgumentToken.Literal(Config.StringComparer, arg));
                     continue;
                 }
 
@@ -36,10 +36,10 @@ namespace ConsoleApplication3.Parsing
                     continue;
                 }
 
-                foreach (var token in ParseTokens(arg))
+                foreach (var token in ParseTokens(Config, arg))
                 {
                     ArgumentToken[] exploded;
-                    if (token.TryExplodeSwitchGroup(out exploded))
+                    if (token.TryExplodeSwitchGroup(Config.StringComparer, out exploded))
                     {
                         tokens.AddRange(exploded);
                         continue;
@@ -52,40 +52,41 @@ namespace ConsoleApplication3.Parsing
             return tokens.ToArray();
         }
 
-        private static ArgumentToken[] ParseTokens(string arg)
+        private static ArgumentToken[] ParseTokens(ApplicationConfiguration<TResult> config, string arg)
         {
             var tokens = new List<ArgumentToken>(capacity: 2);
 
             string modifier;
             string nameValue;
-            if (TryParseOption(arg, out modifier, out nameValue))
+            if (TryParseOption(config, arg, out modifier, out nameValue))
             {
                 string name;
                 string value;
                 if (TrySplitNameValue(nameValue, out name, out value))
                 {
-                    tokens.Add(ArgumentToken.Option(modifier, name));
+                    tokens.Add(ArgumentToken.Option(config.StringComparer, modifier, name));
 
                     if (!string.IsNullOrEmpty(value))
                     {
-                        tokens.Add(ArgumentToken.Literal(value));
+                        tokens.Add(ArgumentToken.Literal(config.StringComparer, value));
                     }
                 }
                 else
                 {
-                    tokens.Add(ArgumentToken.Option(modifier, nameValue));
+                    tokens.Add(ArgumentToken.Option(config.StringComparer, modifier, nameValue));
                 }
             }
             else
             {
-                tokens.Add(ArgumentToken.Literal(arg));
+                tokens.Add(ArgumentToken.Literal(config.StringComparer, arg));
             }
 
             return tokens.ToArray();
         }
 
-        private static bool TryParseOption(string arg, out string modifier, out string nameValue)
+        private static bool TryParseOption(ApplicationConfiguration<TResult> config, string arg, out string modifier, out string nameValue)
         {
+            // TODO: Add option to customize modifiers.
             return TryParseOption(arg, "--", out modifier, out nameValue)
                 || TryParseOption(arg, "-", out modifier, out nameValue);
         }

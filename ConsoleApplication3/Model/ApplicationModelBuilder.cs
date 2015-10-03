@@ -8,7 +8,7 @@ namespace ConsoleApplication3.Model
         public ApplicationModelBuilder(ApplicationConfiguration<TResult> config)
         {
             Config = config;
-            Commands = new Dictionary<string, ICommandModel<TResult>>(StringComparer.Ordinal);
+            Commands = new Dictionary<string, ICommandModel<TResult>>(config.StringComparer);
         }
 
         private ApplicationConfiguration<TResult> Config { get; }

@@ -39,7 +39,7 @@ namespace ConsoleApplication3.Model
 
             var names = option.Split(NameSeparator);
 
-            var options = new Dictionary<string, IOptionModel<TResult>>(StringComparer.Ordinal);
+            var options = new Dictionary<string, IOptionModel<TResult>>(config.StringComparer);
 
             foreach (var name in names)
             {

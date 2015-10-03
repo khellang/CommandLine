@@ -7,11 +7,14 @@ namespace ConsoleApplication3.Parsing
     [DebuggerDisplay("{ToString(), nq}")]
     internal struct ArgumentToken : IEquatable<ArgumentToken>
     {
-        private ArgumentToken(string value, string modifier)
+        private ArgumentToken(StringComparer comparer, string value, string modifier)
         {
+            Comparer = comparer;
             Value = value;
             Modifier = modifier;
         }
+
+        public StringComparer Comparer { get; }
 
         public string Value { get; }
 
@@ -21,11 +24,11 @@ namespace ConsoleApplication3.Parsing
 
         private bool IsSwitch => Modifier == "-";
 
-        public bool TryExplodeSwitchGroup(out ArgumentToken[] tokens)
+        public bool TryExplodeSwitchGroup(StringComparer comparer, out ArgumentToken[] tokens)
         {
             if (IsSwitch && Value.Length > 1)
             {
-                tokens = Value.Select(option => Option("-", option.ToString())).ToArray();
+                tokens = Value.Select(option => Option(comparer, "-", option.ToString())).ToArray();
                 return true;
             }
 
@@ -33,19 +36,19 @@ namespace ConsoleApplication3.Parsing
             return false;
         }
 
-        public static ArgumentToken Literal(string value)
+        public static ArgumentToken Literal(StringComparer comparer, string value)
         {
-            return new ArgumentToken(value, string.Empty);
+            return new ArgumentToken(comparer, value, string.Empty);
         }
 
-        public static ArgumentToken Option(string modifier, string name)
+        public static ArgumentToken Option(StringComparer comparer, string modifier, string name)
         {
-            return new ArgumentToken(name, modifier);
+            return new ArgumentToken(comparer, name, modifier);
         }
 
         public bool Equals(ArgumentToken other)
         {
-            return string.Equals(Value, other.Value) && string.Equals(Modifier, other.Modifier);
+            return Comparer.Equals(Value, other.Value) && Comparer.Equals(Modifier, other.Modifier);
         }
 
         public override bool Equals(object obj)

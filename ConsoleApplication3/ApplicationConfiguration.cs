@@ -9,12 +9,15 @@ namespace ConsoleApplication3
         {
             CultureInfo = CultureInfo.InvariantCulture;
             ErrorHandler = DefaultErrorHandler;
+            StringComparer = StringComparer.Ordinal;
             HandleErrors = true;
         }
 
         public CultureInfo CultureInfo { get; set; }
 
         public Func<Exception, TResult> ErrorHandler { get; set; }
+
+        public StringComparer StringComparer { get; set; }
 
         internal bool HandleErrors { get; set; }
 
