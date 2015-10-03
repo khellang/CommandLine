@@ -84,19 +84,25 @@ namespace ConsoleApplication3.Tests
         [Fact]
         public void ShouldThrowForInvalidArgumentType()
         {
-            Assert.Throws<ArgumentParserException>(() => Parse<Args>("command -i hello"));
+            var exception = Assert.Throws<ArgumentParserException>(() => Parse<Args>("command -i hello"));
+
+            Assert.Contains("failed to parse option", exception.Message);
         }
 
         [Fact]
         public void ShouldThrowForPositionalArguments()
         {
-            Assert.Throws<ArgumentParserException>(() => Parse<Args>("command -s hello world"));
+            var exception = Assert.Throws<ArgumentParserException>(() => Parse<Args>("command -s hello world"));
+
+            Assert.Contains("invalid argument", exception.Message);
         }
 
         [Fact]
         public void ShouldThrowForUnknownCommand()
         {
-            Assert.Throws<ArgumentParserException>(() => Parse<Args>("hello"));
+            var exception = Assert.Throws<ArgumentParserException>(() => Parse<Args>("hello"));
+
+            Assert.Contains("unknown command", exception.Message);
         }
 
         [Theory]
@@ -104,19 +110,25 @@ namespace ConsoleApplication3.Tests
         [InlineData("command -i -s hello")]
         public void ShouldThrowForMissingValue(string arguments)
         {
-            Assert.Throws<ArgumentParserException>(() => Parse<Args>(arguments));
+            var exception = Assert.Throws<ArgumentParserException>(() => Parse<Args>(arguments));
+
+            Assert.Contains("requires a value", exception.Message);
         }
 
         [Fact]
         public void ShouldThrowForUnknownOption()
         {
-            Assert.Throws<ArgumentParserException>(() => Parse<Args>("command --asdf"));
+            var exception = Assert.Throws<ArgumentParserException>(() => Parse<Args>("command --asdf"));
+
+            Assert.Contains("unknown option", exception.Message);
         }
 
         [Fact]
         public void ShouldThrowForEmptyArguments()
         {
-            Assert.Throws<ArgumentParserException>(() => Parse<Args>(string.Empty));
+            var exception = Assert.Throws<ArgumentParserException>(() => Parse<Args>(string.Empty));
+
+            Assert.Contains("please specify command", exception.Message);
         }
 
         private static IReadOnlyDictionary<string, ICommandModel<int>> GetCommands(Action<IApplicationModelBuilder<int>> build)
