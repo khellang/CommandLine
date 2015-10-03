@@ -109,6 +109,7 @@ namespace ConsoleApplication3.Tests
         [Theory]
         [InlineData("command -s")]
         [InlineData("command -i -s hello")]
+        [InlineData("command --string:")]
         public void ShouldThrowForMissingValue(string arguments)
         {
             var exception = Assert.Throws<ArgumentParserException>(() => Parse<Args>(arguments));

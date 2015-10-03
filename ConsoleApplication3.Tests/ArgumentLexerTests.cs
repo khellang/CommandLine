@@ -55,6 +55,12 @@ namespace ConsoleApplication3.Tests
             Lex(string.Empty);
         }
 
+        [Fact]
+        public void ShouldCorrectlyHandleMissingValues()
+        {
+            Lex("--string:", Option("--", "string"));
+        }
+
         private static void Lex(string args, params ArgumentToken[] expected)
         {
             Assert.Equal(expected, ArgumentLexer.Lex(args.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries)));

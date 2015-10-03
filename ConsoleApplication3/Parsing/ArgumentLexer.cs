@@ -58,7 +58,11 @@ namespace ConsoleApplication3.Parsing
                 if (TrySplitNameValue(nameValue, out name, out value))
                 {
                     tokens.Add(ArgumentToken.Option(modifier, name));
-                    tokens.Add(ArgumentToken.Literal(value));
+
+                    if (!string.IsNullOrEmpty(value))
+                    {
+                        tokens.Add(ArgumentToken.Literal(value));
+                    }
                 }
                 else
                 {
@@ -102,6 +106,7 @@ namespace ConsoleApplication3.Parsing
         private static bool TrySplitNameValue(string arg, char separator, out string name, out string value)
         {
             var index = arg.IndexOf(separator);
+
             if (index >= 0)
             {
                 name = arg.Substring(0, index);
