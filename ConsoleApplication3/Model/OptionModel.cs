@@ -39,7 +39,7 @@ namespace ConsoleApplication3.Model
             {
                 var trimmedName = name.Trim();
 
-                if (!Utilities.IsValidName(trimmedName))
+                if (!trimmedName.IsValidName())
                 {
                     throw new ArgumentException($"The option name '{trimmedName}' is invalid.", nameof(option));
                 }

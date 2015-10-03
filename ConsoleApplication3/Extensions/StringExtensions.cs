@@ -1,8 +1,8 @@
-namespace ConsoleApplication3
+﻿namespace ConsoleApplication3.Extensions
 {
-    internal static class Utilities
+    internal static class StringExtensions
     {
-        public static bool IsValidName(string name)
+        public static bool IsValidName(this string name)
         {
             if (string.IsNullOrEmpty(name))
             {

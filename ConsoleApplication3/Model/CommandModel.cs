@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using ConsoleApplication3.Extensions;
 
 namespace ConsoleApplication3.Model
 {
@@ -32,7 +33,7 @@ namespace ConsoleApplication3.Model
         {
             var trimmedName = name.Trim();
 
-            if (!Utilities.IsValidName(trimmedName))
+            if (!trimmedName.IsValidName())
             {
                 throw new ArgumentException($"The command name '{trimmedName}' is invalid.", nameof(trimmedName));
             }
