@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq.Expressions;
 
-namespace ConsoleApplication3
+namespace ConsoleApplication3.Model
 {
     public interface IOptionModelRegistry<TArgs, out TRegistry> where TRegistry : IOptionModelRegistry<TArgs, TRegistry>
     {

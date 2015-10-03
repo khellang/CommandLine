@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq.Expressions;
 
-namespace ConsoleApplication3
+namespace ConsoleApplication3.Model
 {
     internal class CommandModelBuilder<TArgs, TResult> : ICommandModelBuilder<TArgs, TResult>
         where TArgs : new()

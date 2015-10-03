@@ -1,4 +1,4 @@
-﻿namespace ConsoleApplication3
+﻿namespace ConsoleApplication3.Model
 {
     public interface ICommandModelBuilder<TArgs, TResult>
         : IOptionModelRegistry<TArgs, TResult, ICommandModelBuilder<TArgs, TResult>>

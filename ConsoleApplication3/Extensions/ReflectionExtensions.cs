@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace ConsoleApplication3
+namespace ConsoleApplication3.Extensions
 {
     internal static class ReflectionExtensions
     {

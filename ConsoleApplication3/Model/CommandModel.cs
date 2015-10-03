@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 
-namespace ConsoleApplication3
+namespace ConsoleApplication3.Model
 {
     [DebuggerDisplay("{Name, nq}")]
     internal sealed class CommandModel<TResult> : ICommandModel<TResult>

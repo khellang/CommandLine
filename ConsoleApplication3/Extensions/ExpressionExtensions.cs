@@ -2,7 +2,7 @@ using System;
 using System.Linq.Expressions;
 using System.Reflection;
 
-namespace ConsoleApplication3
+namespace ConsoleApplication3.Extensions
 {
     internal static class ExpressionExtensions
     {

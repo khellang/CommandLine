@@ -1,4 +1,6 @@
-﻿namespace ConsoleApplication3.Parsing
+﻿using ConsoleApplication3.Model;
+
+namespace ConsoleApplication3.Parsing
 {
     internal class ArgumentParserResult<TResult>
     {

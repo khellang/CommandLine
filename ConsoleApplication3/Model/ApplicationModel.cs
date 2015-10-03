@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using ConsoleApplication3.Parsing;
 
-namespace ConsoleApplication3
+namespace ConsoleApplication3.Model
 {
     internal class ApplicationModel<TResult> : IApplicationModel<TResult>
     {

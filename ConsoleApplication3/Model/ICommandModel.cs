@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace ConsoleApplication3
+namespace ConsoleApplication3.Model
 {
     internal interface ICommandModel
     {

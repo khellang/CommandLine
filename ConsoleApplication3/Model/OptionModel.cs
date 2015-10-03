@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq.Expressions;
 using System.Reflection;
+using ConsoleApplication3.Extensions;
 
-namespace ConsoleApplication3
+namespace ConsoleApplication3.Model
 {
     [DebuggerDisplay("{Name, nq}")]
     internal sealed class OptionModel : IOptionModel

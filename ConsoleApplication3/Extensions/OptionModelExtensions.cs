@@ -2,9 +2,10 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
+using ConsoleApplication3.Model;
 using ConsoleApplication3.Parsing;
 
-namespace ConsoleApplication3
+namespace ConsoleApplication3.Extensions
 {
     internal static class OptionModelExtensions
     {

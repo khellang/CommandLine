@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace ConsoleApplication3
+namespace ConsoleApplication3.Model
 {
     public interface IApplicationModelBuilder<TResult>
     {
