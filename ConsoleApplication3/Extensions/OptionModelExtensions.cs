@@ -50,7 +50,7 @@ namespace ConsoleApplication3
             }
             catch (Exception ex)
             {
-                throw new ArgumentParserException($"failed to parse option '{optionModel.Name}': {ex.Message}");
+                throw new ArgumentParserException($"Failed to parse option '{optionModel.Name}': {ex.Message}");
             }
         }
     }

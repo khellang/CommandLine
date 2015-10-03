@@ -7,28 +7,23 @@ namespace ConsoleApplication3.Parsing
     [DebuggerDisplay("{ToString(), nq}")]
     internal struct ArgumentToken : IEquatable<ArgumentToken>
     {
-        private ArgumentToken(ArgumentTokenKind kind, string value, string modifier)
+        private ArgumentToken(string value, string modifier)
         {
-            Kind = kind;
             Value = value;
             Modifier = modifier;
         }
-
-        public ArgumentTokenKind Kind { get; }
 
         public string Value { get; }
 
         public string Modifier { get; }
 
-        public bool IsLiteral => Kind == ArgumentTokenKind.Literal;
-
-        public bool IsOption => Kind == ArgumentTokenKind.Option;
+        public bool IsLiteral => string.IsNullOrEmpty(Modifier);
 
         private bool IsSwitch => Modifier == "-";
 
         public bool TryExplodeSwitchGroup(out ArgumentToken[] tokens)
         {
-            if (IsOption && IsSwitch && Value.Length > 1)
+            if (IsSwitch && Value.Length > 1)
             {
                 tokens = Value.Select(option => Option("-", option.ToString())).ToArray();
                 return true;
@@ -40,17 +35,17 @@ namespace ConsoleApplication3.Parsing
 
         public static ArgumentToken Literal(string value)
         {
-            return new ArgumentToken(ArgumentTokenKind.Literal, value, string.Empty);
+            return new ArgumentToken(value, string.Empty);
         }
 
         public static ArgumentToken Option(string modifier, string name)
         {
-            return new ArgumentToken(ArgumentTokenKind.Option, name, modifier);
+            return new ArgumentToken(name, modifier);
         }
 
         public bool Equals(ArgumentToken other)
         {
-            return Kind == other.Kind && string.Equals(Value, other.Value) && string.Equals(Modifier, other.Modifier);
+            return string.Equals(Value, other.Value) && string.Equals(Modifier, other.Modifier);
         }
 
         public override bool Equals(object obj)
@@ -63,16 +58,7 @@ namespace ConsoleApplication3.Parsing
             return obj is ArgumentToken && Equals((ArgumentToken) obj);
         }
 
-        public override int GetHashCode()
-        {
-            unchecked
-            {
-                var hashCode = (int) Kind;
-                hashCode = (hashCode * 397) ^ Value.GetHashCode();
-                hashCode = (hashCode * 397) ^ Modifier.GetHashCode();
-                return hashCode;
-            }
-        }
+
 
         public static bool operator ==(ArgumentToken left, ArgumentToken right)
         {
@@ -86,7 +72,7 @@ namespace ConsoleApplication3.Parsing
 
         public override string ToString()
         {
-            return $"{Kind}: {Modifier}{Value}";
+            return $"{(IsLiteral ? "Literal" : "Option")}: {Modifier}{Value}";
         }
     }
 }

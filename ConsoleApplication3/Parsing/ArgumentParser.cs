@@ -18,78 +18,81 @@ namespace ConsoleApplication3.Parsing
 
             var command = GetCommand(tokenQueue);
 
-            var args = Activator.CreateInstance(command.Type);
-
-            IOptionModel optionModel = null;
-
-            while (tokenQueue.Count > 0)
-            {
-                var token = tokenQueue.Dequeue();
-
-                switch (token.Kind)
-                {
-                    case ArgumentTokenKind.Literal:
-                        if (optionModel == null)
-                        {
-                            // We don't support positional arguments yet.
-                            throw new ArgumentParserException($"invalid argument '{token.Value}'", command);
-                        }
-
-                        if (optionModel.IsList())
-                        {
-                            var values = new List<string> { token.Value };
-
-                            while (tokenQueue.Count > 0 && tokenQueue.Peek().IsLiteral)
-                            {
-                                values.Add(tokenQueue.Dequeue().Value);
-                            }
-
-                            optionModel.SetValues(args, values.ToArray());
-                            optionModel = null;
-                            break;
-                        }
-
-                        optionModel.SetValue(args, token.Value);
-                        optionModel = null;
-                        break;
-                    case ArgumentTokenKind.Option:
-                        if (optionModel != null)
-                        {
-                            // Two options right after each other.
-                            throw new ArgumentParserException($"option '{optionModel.Name}' requires a value", command);
-                        }
-
-                        if (!command.Options.TryGetValue(token.Value, out optionModel))
-                        {
-                            throw new ArgumentParserException($"unknown option '{token.Value}'", command);
-                        }
-
-                        if (optionModel.IsFlag())
-                        {
-                            var flagValue = "true";
-
-                            if (tokenQueue.Count > 0 && tokenQueue.Peek().IsLiteral)
-                            {
-                                // Explicit flag parameter, i.e. --quiet:true
-                                flagValue = tokenQueue.Dequeue().Value;
-                            }
-
-                            optionModel.SetValue(args, flagValue);
-                            optionModel = null;
-                        }
-                        break;
-                    default:
-                        throw new ArgumentOutOfRangeException(nameof(token.Kind));
-                }
-            }
-
-            if (optionModel != null)
-            {
-                // The last token was an option, but we didn't received a value.
-                throw new ArgumentParserException($"option '{optionModel.Name}' requires a value", command);
-            }
+            var args = ParseOptions(tokenQueue, command, Activator.CreateInstance(command.Type));
 
             return new ArgumentParserResult<TResult>(args, command);
+        }
+
+        private static object ParseOptions(Queue<ArgumentToken> tokens, ICommandModel<TResult> command, object args)
+        {
+            if (tokens.Count == 0)
+            {
+                return args;
+            }
+
+            var token = tokens.Dequeue();
+
+            if (token.IsLiteral)
+            {
+                throw new ArgumentParserException($"Invalid argument: {token.Value}", command);
+            }
+
+            IOptionModel option;
+            if (!command.Options.TryGetValue(token.Value, out option))
+            {
+                throw new ArgumentParserException($"Unknown option: {token.Value}", command);
+            }
+
+            return ParseArguments(tokens, command, args, option);
+        }
+
+        private static object ParseArguments(Queue<ArgumentToken> tokens, ICommandModel<TResult> command, object args, IOptionModel option)
+        {
+            if (IsNextArgument(tokens))
+            {
+                var token = tokens.Dequeue();
+
+                if (option.IsList())
+                {
+                    var values = new List<string> { token.Value };
+
+                    return ParseListArgument(tokens, command, args, option, values);
+                }
+
+                option.SetValue(args, token.Value);
+
+                return ParseOptions(tokens, command, args);
+            }
+
+            if (option.IsFlag())
+            {
+                option.SetValue(args, "true");
+
+                return ParseOptions(tokens, command, args);
+            }
+
+            throw new ArgumentParserException($"Option '{option.Name}' requires a value", command);
+        }
+
+        private static object ParseListArgument(Queue<ArgumentToken> tokens, ICommandModel<TResult> command, object args, IOptionModel option, List<string> values)
+        {
+            if (IsNextArgument(tokens))
+            {
+                var token = tokens.Dequeue();
+
+                values.Add(token.Value);
+
+                return ParseListArgument(tokens, command, args, option, values);
+            }
+
+            option.SetValues(args, values.ToArray());
+
+            return ParseOptions(tokens, command, args);
+        }
+
+        private static bool IsNextArgument(Queue<ArgumentToken> tokens)
+        {
+            return tokens.Count > 0 && tokens.Peek().IsLiteral;
         }
 
         private ICommandModel<TResult> GetCommand(Queue<ArgumentToken> tokens)
@@ -97,7 +100,7 @@ namespace ConsoleApplication3.Parsing
             if (tokens.Count == 0)
             {
                 // TODO: Return help command.
-                throw new ArgumentParserException("please specify command");
+                throw new ArgumentParserException("Please specify a command");
             }
 
             var commandToken = tokens.Dequeue();
@@ -105,7 +108,7 @@ namespace ConsoleApplication3.Parsing
             ICommandModel<TResult> command;
             if (!Commands.TryGetValue(commandToken.Value, out command))
             {
-                throw new ArgumentParserException($"unknown command '{commandToken.Value}'");
+                throw new ArgumentParserException($"Unknown command: {commandToken.Value}");
             }
 
             return command;

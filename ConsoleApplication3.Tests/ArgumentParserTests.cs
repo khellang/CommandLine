@@ -86,7 +86,7 @@ namespace ConsoleApplication3.Tests
         {
             var exception = Assert.Throws<ArgumentParserException>(() => Parse<Args>("command -i hello"));
 
-            Assert.Contains("failed to parse option", exception.Message);
+            Assert.Contains("Failed to parse option", exception.Message);
         }
 
         [Fact]
@@ -94,7 +94,7 @@ namespace ConsoleApplication3.Tests
         {
             var exception = Assert.Throws<ArgumentParserException>(() => Parse<Args>("command -s hello world"));
 
-            Assert.Contains("invalid argument", exception.Message);
+            Assert.Contains("Invalid argument", exception.Message);
         }
 
         [Fact]
@@ -102,7 +102,7 @@ namespace ConsoleApplication3.Tests
         {
             var exception = Assert.Throws<ArgumentParserException>(() => Parse<Args>("hello"));
 
-            Assert.Contains("unknown command", exception.Message);
+            Assert.Contains("Unknown command", exception.Message);
         }
 
         [Theory]
@@ -120,7 +120,7 @@ namespace ConsoleApplication3.Tests
         {
             var exception = Assert.Throws<ArgumentParserException>(() => Parse<Args>("command --asdf"));
 
-            Assert.Contains("unknown option", exception.Message);
+            Assert.Contains("Unknown option", exception.Message);
         }
 
         [Fact]
@@ -128,7 +128,7 @@ namespace ConsoleApplication3.Tests
         {
             var exception = Assert.Throws<ArgumentParserException>(() => Parse<Args>(string.Empty));
 
-            Assert.Contains("please specify command", exception.Message);
+            Assert.Contains("Please specify a command", exception.Message);
         }
 
         private static IReadOnlyDictionary<string, ICommandModel<int>> GetCommands(Action<IApplicationModelBuilder<int>> build)

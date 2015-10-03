@@ -46,7 +46,6 @@
     <Compile Include="Extensions\OptionModelExtensions.cs" />
     <Compile Include="Parsing\ArgumentParserException.cs" />
     <Compile Include="Parsing\ArgumentParserResult.cs" />
-    <Compile Include="Parsing\ArgumentTokenKind.cs" />
     <Compile Include="Model\ApplicationModelBuilder.cs" />
     <Compile Include="Parsing\ArgumentToken.cs" />
     <Compile Include="Model\CommandModelBuilder.cs" />
