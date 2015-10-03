@@ -5,18 +5,23 @@ namespace ConsoleApplication3.Model
 {
     internal class ApplicationModel<TResult> : IApplicationModel<TResult>
     {
-        public ApplicationModel(IReadOnlyDictionary<string, ICommandModel<TResult>> commands)
+        public ApplicationModel(ApplicationConfiguration config, IReadOnlyDictionary<string, ICommandModel<TResult>> commands)
         {
+            Config = config;
             Commands = commands;
         }
+
+        private ApplicationConfiguration Config { get; }
 
         public IReadOnlyDictionary<string, ICommandModel<TResult>> Commands { get; }
 
         public TResult Run(string[] args)
         {
-            var tokens = ArgumentLexer.Lex(args);
+            var lexer = new ArgumentLexer(Config);
 
-            var parser = new ArgumentParser<TResult>(Commands);
+            var tokens = lexer.Lex(args);
+
+            var parser = new ArgumentParser<TResult>(Config, Commands);
 
             var result = parser.Parse(tokens);
 

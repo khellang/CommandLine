@@ -10,6 +10,8 @@ namespace ConsoleApplication3.Tests
     {
         public ArgumentParserTests()
         {
+            var config = new ApplicationConfiguration();
+
             var commands = GetCommands(app =>
             {
                 app.AddCommand<Args>("command", cmd =>
@@ -26,8 +28,11 @@ namespace ConsoleApplication3.Tests
                 });
             });
 
-            Parser = new ArgumentParser<int>(commands);
+            Lexer = new ArgumentLexer(config);
+            Parser = new ArgumentParser<int>(config, commands);
         }
+
+        private ArgumentLexer Lexer { get; }
 
         private ArgumentParser<int> Parser { get; }
 
@@ -145,8 +150,8 @@ namespace ConsoleApplication3.Tests
 
         private T Parse<T>(string args)
         {
-            return (T) Parser.Parse(ArgumentLexer.Lex(
-                args.Split(new [] { ' ' }, StringSplitOptions.RemoveEmptyEntries))).Args;
+            return (T) Parser.Parse(Lexer.Lex(args
+                .Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries))).Args;
         }
 
         private class Args

@@ -7,10 +7,13 @@ namespace ConsoleApplication3.Parsing
 {
     internal class ArgumentParser<TResult>
     {
-        public ArgumentParser(IReadOnlyDictionary<string, ICommandModel<TResult>> commands)
+        public ArgumentParser(ApplicationConfiguration config, IReadOnlyDictionary<string, ICommandModel<TResult>> commands)
         {
+            Config = config;
             Commands = commands;
         }
+
+        private ApplicationConfiguration Config { get; }
 
         private IReadOnlyDictionary<string, ICommandModel<TResult>> Commands { get; }
 

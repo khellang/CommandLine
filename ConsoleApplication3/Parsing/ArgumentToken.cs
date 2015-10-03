@@ -58,7 +58,13 @@ namespace ConsoleApplication3.Parsing
             return obj is ArgumentToken && Equals((ArgumentToken) obj);
         }
 
-
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                return (Value.GetHashCode() * 397) ^ Modifier.GetHashCode();
+            }
+        }
 
         public static bool operator ==(ArgumentToken left, ArgumentToken right)
         {

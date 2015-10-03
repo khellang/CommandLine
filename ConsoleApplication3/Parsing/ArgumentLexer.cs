@@ -2,9 +2,16 @@
 
 namespace ConsoleApplication3.Parsing
 {
-    internal static class ArgumentLexer
+    internal class ArgumentLexer
     {
-        public static ArgumentToken[] Lex(string[] args)
+        public ArgumentLexer(ApplicationConfiguration config)
+        {
+            Config = config;
+        }
+
+        private ApplicationConfiguration Config { get; }
+
+        public ArgumentToken[] Lex(string[] args)
         {
             var tokens = new List<ArgumentToken>();
 
@@ -13,11 +20,11 @@ namespace ConsoleApplication3.Parsing
                 return tokens.ToArray();
             }
 
-            var isLiteral = false;
+            var escapeOptions = false;
 
             foreach (var arg in args)
             {
-                if (isLiteral)
+                if (escapeOptions)
                 {
                     tokens.Add(ArgumentToken.Literal(arg));
                     continue;
@@ -25,7 +32,7 @@ namespace ConsoleApplication3.Parsing
 
                 if (arg == "--")
                 {
-                    isLiteral = true;
+                    escapeOptions = true;
                     continue;
                 }
 

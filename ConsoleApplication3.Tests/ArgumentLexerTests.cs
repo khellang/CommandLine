@@ -7,6 +7,10 @@ namespace ConsoleApplication3.Tests
 {
     public class ArgumentLexerTests
     {
+        private static ApplicationConfiguration Config { get; } = new ApplicationConfiguration();
+
+        private ArgumentLexer Lexer { get; } = new ArgumentLexer(Config);
+
         [Fact]
         public void ShouldLexLiterals()
         {
@@ -61,9 +65,9 @@ namespace ConsoleApplication3.Tests
             Lex("--string:", Option("--", "string"));
         }
 
-        private static void Lex(string args, params ArgumentToken[] expected)
+        private void Lex(string args, params ArgumentToken[] expected)
         {
-            Assert.Equal(expected, ArgumentLexer.Lex(args.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries)));
+            Assert.Equal(expected, Lexer.Lex(args.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries)));
         }
     }
 }

@@ -30,7 +30,7 @@ namespace ConsoleApplication3.Model
 
         public ApplicationModel<TResult> Build()
         {
-            return new ApplicationModel<TResult>(Commands);
+            return new ApplicationModel<TResult>(Config, Commands);
         }
     }
 }
