@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace ConsoleApplication3.Model
 {
-    internal class ApplicationModelBuilder<TResult> : IApplicationModelBuilder<TResult>
+    internal sealed class ApplicationModelBuilder<TResult> : IApplicationModelBuilder<TResult>
     {
         public ApplicationModelBuilder(ApplicationConfiguration config)
         {

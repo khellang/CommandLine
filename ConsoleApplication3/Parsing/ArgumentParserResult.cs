@@ -2,7 +2,7 @@
 
 namespace ConsoleApplication3.Parsing
 {
-    internal class ArgumentParserResult<TResult>
+    internal sealed class ArgumentParserResult<TResult>
     {
         public ArgumentParserResult(object args, ICommandModel<TResult> command)
         {

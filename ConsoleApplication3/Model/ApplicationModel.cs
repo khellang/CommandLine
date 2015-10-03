@@ -3,7 +3,7 @@ using ConsoleApplication3.Parsing;
 
 namespace ConsoleApplication3.Model
 {
-    internal class ApplicationModel<TResult> : IApplicationModel<TResult>
+    internal sealed class ApplicationModel<TResult> : IApplicationModel<TResult>
     {
         public ApplicationModel(ApplicationConfiguration config, IReadOnlyDictionary<string, ICommandModel<TResult>> commands)
         {

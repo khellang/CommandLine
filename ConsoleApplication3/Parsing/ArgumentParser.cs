@@ -5,7 +5,7 @@ using ConsoleApplication3.Model;
 
 namespace ConsoleApplication3.Parsing
 {
-    internal class ArgumentParser<TResult>
+    internal sealed class ArgumentParser<TResult>
     {
         public ArgumentParser(ApplicationConfiguration config, IReadOnlyDictionary<string, ICommandModel<TResult>> commands)
         {

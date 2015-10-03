@@ -2,7 +2,7 @@
 
 namespace ConsoleApplication3.Parsing
 {
-    internal class ArgumentLexer
+    internal sealed class ArgumentLexer
     {
         public ArgumentLexer(ApplicationConfiguration config)
         {
