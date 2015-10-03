@@ -2,14 +2,14 @@
 
 namespace ConsoleApplication3.Parsing
 {
-    internal sealed class ArgumentLexer
+    internal sealed class ArgumentLexer<TResult>
     {
-        public ArgumentLexer(ApplicationConfiguration config)
+        public ArgumentLexer(ApplicationConfiguration<TResult> config)
         {
             Config = config;
         }
 
-        private ApplicationConfiguration Config { get; }
+        private ApplicationConfiguration<TResult> Config { get; }
 
         public ArgumentToken[] Lex(string[] args)
         {

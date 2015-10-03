@@ -8,21 +8,27 @@ using ConsoleApplication3.Extensions;
 namespace ConsoleApplication3.Model
 {
     [DebuggerDisplay("{Name, nq}")]
-    internal sealed class OptionModel : IOptionModel
+    internal sealed class OptionModel<TResult> : IOptionModel<TResult>
     {
         private static readonly char[] NameSeparator = { '|' };
 
-        private OptionModel(string name, PropertyInfo property)
+        private OptionModel(ApplicationConfiguration<TResult> config, string name, PropertyInfo property)
         {
+            Config = config;
             Name = name;
             Property = property;
         }
+
+        public ApplicationConfiguration<TResult> Config { get; }
 
         public string Name { get; }
 
         public PropertyInfo Property { get; }
 
-        public static IDictionary<string, OptionModel> Create<TTarget, TProperty>(string option, Expression<Func<TTarget, TProperty>> mapping)
+        public static IDictionary<string, IOptionModel<TResult>> Create<TTarget, TProperty>(
+            ApplicationConfiguration<TResult> config,
+            string option,
+            Expression<Func<TTarget, TProperty>> mapping)
         {
             var property = mapping.GetProperty();
 
@@ -33,7 +39,7 @@ namespace ConsoleApplication3.Model
 
             var names = option.Split(NameSeparator);
 
-            var options = new Dictionary<string, OptionModel>(StringComparer.Ordinal);
+            var options = new Dictionary<string, IOptionModel<TResult>>(StringComparer.Ordinal);
 
             foreach (var name in names)
             {
@@ -44,7 +50,7 @@ namespace ConsoleApplication3.Model
                     throw new ArgumentException($"The option name '{trimmedName}' is invalid.", nameof(option));
                 }
 
-                options.Add(trimmedName, new OptionModel(trimmedName, property));
+                options.Add(trimmedName, new OptionModel<TResult>(config, trimmedName, property));
             }
 
             return options;

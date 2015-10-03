@@ -8,12 +8,12 @@ namespace ConsoleApplication3.Model
         Type Type { get; }
 
         string Name { get; }
-
-        IReadOnlyDictionary<string, IOptionModel> Options { get; }
     }
 
-    internal interface ICommandModel<out TResult> : ICommandModel
+    internal interface ICommandModel<TResult> : ICommandModel
     {
         Func<object, TResult> Execute { get; }
+
+        IReadOnlyDictionary<string, IOptionModel<TResult>> Options { get; }
     }
 }

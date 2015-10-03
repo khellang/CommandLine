@@ -5,13 +5,13 @@ namespace ConsoleApplication3.Model
 {
     internal sealed class ApplicationModelBuilder<TResult> : IApplicationModelBuilder<TResult>
     {
-        public ApplicationModelBuilder(ApplicationConfiguration config)
+        public ApplicationModelBuilder(ApplicationConfiguration<TResult> config)
         {
             Config = config;
             Commands = new Dictionary<string, ICommandModel<TResult>>(StringComparer.Ordinal);
         }
 
-        private ApplicationConfiguration Config { get; }
+        private ApplicationConfiguration<TResult> Config { get; }
 
         private Dictionary<string, ICommandModel<TResult>> Commands { get; }
 

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Runtime.ExceptionServices;
 using ConsoleApplication3.Model;
 using ConsoleApplication3.Parsing;
 using Xunit;
@@ -10,7 +11,7 @@ namespace ConsoleApplication3.Tests
     {
         public ArgumentParserTests()
         {
-            var config = new ApplicationConfiguration();
+            var config = new ApplicationConfiguration<int>();
 
             var commands = GetCommands(app =>
             {
@@ -28,11 +29,11 @@ namespace ConsoleApplication3.Tests
                 });
             });
 
-            Lexer = new ArgumentLexer(config);
+            Lexer = new ArgumentLexer<int>(config);
             Parser = new ArgumentParser<int>(config, commands);
         }
 
-        private ArgumentLexer Lexer { get; }
+        private ArgumentLexer<int> Lexer { get; }
 
         private ArgumentParser<int> Parser { get; }
 
@@ -140,7 +141,7 @@ namespace ConsoleApplication3.Tests
 
         private static IReadOnlyDictionary<string, ICommandModel<int>> GetCommands(Action<IApplicationModelBuilder<int>> build)
         {
-            var config = new ApplicationConfiguration
+            var config = new ApplicationConfiguration<int>
             {
                 HandleErrors = false
             };

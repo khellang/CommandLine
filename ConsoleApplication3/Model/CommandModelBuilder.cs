@@ -7,22 +7,22 @@ namespace ConsoleApplication3.Model
     internal sealed class CommandModelBuilder<TArgs, TResult> : ICommandModelBuilder<TArgs, TResult>
         where TArgs : new()
     {
-        public CommandModelBuilder(ApplicationConfiguration config, string name)
+        public CommandModelBuilder(ApplicationConfiguration<TResult> config, string name)
         {
             Config = config;
             Name = name;
-            Options = new Dictionary<string, IOptionModel>(StringComparer.Ordinal);
+            Options = new Dictionary<string, IOptionModel<TResult>>(StringComparer.Ordinal);
         }
 
-        private ApplicationConfiguration Config { get; }
+        private ApplicationConfiguration<TResult> Config { get; }
 
         private string Name { get; }
 
-        private Dictionary<string, IOptionModel> Options { get; }
+        private Dictionary<string, IOptionModel<TResult>> Options { get; }
 
         public ICommandModelBuilder<TArgs, TResult> MapOption<TProperty>(string option, Expression<Func<TArgs, TProperty>> mapping)
         {
-            var options = OptionModel.Create(option, mapping);
+            var options = OptionModel<TResult>.Create(Config, option, mapping);
 
             foreach (var optionModel in options)
             {

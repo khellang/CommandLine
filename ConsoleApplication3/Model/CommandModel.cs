@@ -11,7 +11,7 @@ namespace ConsoleApplication3.Model
         private CommandModel(Type type,
             string name,
             Func<object, TResult> execute,
-            IReadOnlyDictionary<string, IOptionModel> options)
+            IReadOnlyDictionary<string, IOptionModel<TResult>> options)
         {
             Type = type;
             Name = name;
@@ -25,10 +25,10 @@ namespace ConsoleApplication3.Model
 
         public Func<object, TResult> Execute { get; }
 
-        public IReadOnlyDictionary<string, IOptionModel> Options { get; }
+        public IReadOnlyDictionary<string, IOptionModel<TResult>> Options { get; }
 
         public static CommandModel<TResult> Create<TArgs>(string name,
-            IReadOnlyDictionary<string, IOptionModel> options,
+            IReadOnlyDictionary<string, IOptionModel<TResult>> options,
             Func<TArgs, TResult> execute)
         {
             var trimmedName = name.Trim();

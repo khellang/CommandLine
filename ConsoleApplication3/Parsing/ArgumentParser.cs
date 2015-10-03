@@ -7,13 +7,13 @@ namespace ConsoleApplication3.Parsing
 {
     internal sealed class ArgumentParser<TResult>
     {
-        public ArgumentParser(ApplicationConfiguration config, IReadOnlyDictionary<string, ICommandModel<TResult>> commands)
+        public ArgumentParser(ApplicationConfiguration<TResult> config, IReadOnlyDictionary<string, ICommandModel<TResult>> commands)
         {
             Config = config;
             Commands = commands;
         }
 
-        private ApplicationConfiguration Config { get; }
+        private ApplicationConfiguration<TResult> Config { get; }
 
         private IReadOnlyDictionary<string, ICommandModel<TResult>> Commands { get; }
 
@@ -42,7 +42,7 @@ namespace ConsoleApplication3.Parsing
                 throw new ArgumentParserException($"Invalid argument: {token.Value}", command);
             }
 
-            IOptionModel option;
+            IOptionModel<TResult> option;
             if (!command.Options.TryGetValue(token.Value, out option))
             {
                 throw new ArgumentParserException($"Unknown option: {token.Value}", command);
@@ -51,7 +51,7 @@ namespace ConsoleApplication3.Parsing
             return ParseArguments(tokens, command, args, option);
         }
 
-        private static object ParseArguments(Queue<ArgumentToken> tokens, ICommandModel<TResult> command, object args, IOptionModel option)
+        private static object ParseArguments(Queue<ArgumentToken> tokens, ICommandModel<TResult> command, object args, IOptionModel<TResult> option)
         {
             if (IsNextArgument(tokens))
             {
@@ -79,7 +79,7 @@ namespace ConsoleApplication3.Parsing
             throw new ArgumentParserException($"Option '{option.Name}' requires a value", command);
         }
 
-        private static object ParseListArgument(Queue<ArgumentToken> tokens, ICommandModel<TResult> command, object args, IOptionModel option, List<string> values)
+        private static object ParseListArgument(Queue<ArgumentToken> tokens, ICommandModel<TResult> command, object args, IOptionModel<TResult> option, List<string> values)
         {
             if (IsNextArgument(tokens))
             {
