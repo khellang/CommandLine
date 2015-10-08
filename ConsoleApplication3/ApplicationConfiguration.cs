@@ -1,23 +1,35 @@
 ﻿using System;
 using System.Globalization;
+using System.Linq;
+using System.Reflection;
 
 namespace ConsoleApplication3
 {
-    public class ApplicationConfiguration<TResult>
+    public class ApplicationConfiguration
+    {
+    }
+
+    public class ApplicationConfiguration<TResult> : ApplicationConfiguration
     {
         public ApplicationConfiguration()
         {
-            CultureInfo = CultureInfo.InvariantCulture;
-            ErrorHandler = DefaultErrorHandler;
-            StringComparer = StringComparer.Ordinal;
             HandleErrors = true;
+            ErrorHandler = DefaultErrorHandler;
+            ArgumentActivator = DefaultActivator;
+            StringComparer = StringComparer.Ordinal;
+            CultureInfo = CultureInfo.InvariantCulture;
+            Conventions = new ApplicationConfigurationConventions();
         }
 
         public CultureInfo CultureInfo { get; set; }
 
+        public StringComparer StringComparer { get; set; }
+
+        public Func<Type, object> ArgumentActivator { get; set; }
+
         public Func<Exception, TResult> ErrorHandler { get; set; }
 
-        public StringComparer StringComparer { get; set; }
+        public ApplicationConfigurationConventions Conventions { get; protected set; }
 
         internal bool HandleErrors { get; set; }
 
@@ -30,6 +42,11 @@ namespace ConsoleApplication3
             }
 
             return default(TResult);
+        }
+
+        private static object DefaultActivator(Type type)
+        {
+            return Activator.CreateInstance(type);
         }
     }
 }

@@ -4,7 +4,7 @@ namespace ConsoleApplication3.Parsing
 {
     internal sealed class ArgumentParserResult<TResult>
     {
-        public ArgumentParserResult(object args, ICommandModel<TResult> command)
+        public ArgumentParserResult(object args, Command<TResult> command)
         {
             Args = args;
             Command = command;
@@ -12,6 +12,6 @@ namespace ConsoleApplication3.Parsing
 
         public object Args { get; }
 
-        public ICommandModel<TResult> Command { get; }
+        public Command<TResult> Command { get; }
     }
 }

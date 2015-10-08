@@ -43,25 +43,23 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Application.cs" />
-    <Compile Include="Extensions\OptionModelExtensions.cs" />
+    <Compile Include="ApplicationConfigurationConventions.cs" />
+    <Compile Include="Constants.cs" />
+    <Compile Include="Extensions\OptionExtensions.cs" />
     <Compile Include="Extensions\StringExtensions.cs" />
     <Compile Include="Parsing\ArgumentParserException.cs" />
     <Compile Include="Parsing\ArgumentParserResult.cs" />
-    <Compile Include="Model\ApplicationModelBuilder.cs" />
+    <Compile Include="Model\ApplicationBuilder.cs" />
     <Compile Include="Parsing\ArgumentToken.cs" />
-    <Compile Include="Model\CommandModelBuilder.cs" />
-    <Compile Include="Model\ApplicationModel.cs" />
-    <Compile Include="Model\CommandModel.cs" />
+    <Compile Include="Model\CommandBuilder.cs" />
+    <Compile Include="Model\Command.cs" />
     <Compile Include="ApplicationConfiguration.cs" />
     <Compile Include="Extensions\ExpressionExtensions.cs" />
-    <Compile Include="Model\ICommandModel.cs" />
-    <Compile Include="Model\ICommandModelBuilder.cs" />
-    <Compile Include="Model\IApplicationModel.cs" />
-    <Compile Include="Model\IApplicationModelBuilder.cs" />
-    <Compile Include="Model\IOptionModel.cs" />
-    <Compile Include="Model\IOptionModelRegistry.cs" />
+    <Compile Include="Model\ICommandBuilder.cs" />
+    <Compile Include="Model\IApplicationBuilder.cs" />
+    <Compile Include="Model\IOptionRegistry.cs" />
     <Compile Include="Parsing\ArgumentLexer.cs" />
-    <Compile Include="Model\OptionModel.cs" />
+    <Compile Include="Model\Option.cs" />
     <Compile Include="Parsing\ArgumentParser.cs" />
     <Compile Include="Extensions\ReflectionExtensions.cs" />
     <Compile Include="Program.cs" />

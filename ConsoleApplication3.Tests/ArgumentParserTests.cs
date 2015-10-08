@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Runtime.ExceptionServices;
 using ConsoleApplication3.Model;
 using ConsoleApplication3.Parsing;
 using Xunit;
@@ -23,7 +22,7 @@ namespace ConsoleApplication3.Tests
                     cmd.MapOption("i|integer", x => x.Integer);
                     cmd.MapOption("d|double", x => x.Double);
                     cmd.MapOption("string-list", x => x.StringList);
-                    cmd.MapOption("int-list", x => x.IntegerList);
+                    cmd.MapOption("integer-list", x => x.IntegerList);
 
                     return args => 0;
                 });
@@ -82,7 +81,7 @@ namespace ConsoleApplication3.Tests
         [Fact]
         public void ShouldParseListValues()
         {
-            var result = Parse<Args>("command --int-list 1 2 3 4 --string-list hello world");
+            var result = Parse<Args>("command --integer-list 1 2 3 4 --string-list hello world");
 
             Assert.Equal(new [] { 1, 2, 3, 4 }, result.IntegerList);
             Assert.Equal(new [] { "hello", "world" }, result.StringList);
@@ -91,7 +90,7 @@ namespace ConsoleApplication3.Tests
         [Fact]
         public void ShouldThrowForInvalidArgumentType()
         {
-            var exception = Assert.Throws<ArgumentParserException>(() => Parse<Args>("command -i hello"));
+            var exception = Assert.Throws<ArgumentParserException<int>>(() => Parse<Args>("command -i hello"));
 
             Assert.Contains("Failed to parse option", exception.Message);
         }
@@ -99,7 +98,7 @@ namespace ConsoleApplication3.Tests
         [Fact]
         public void ShouldThrowForPositionalArguments()
         {
-            var exception = Assert.Throws<ArgumentParserException>(() => Parse<Args>("command -s hello world"));
+            var exception = Assert.Throws<ArgumentParserException<int>>(() => Parse<Args>("command -s hello world"));
 
             Assert.Contains("Invalid argument", exception.Message);
         }
@@ -107,7 +106,7 @@ namespace ConsoleApplication3.Tests
         [Fact]
         public void ShouldThrowForUnknownCommand()
         {
-            var exception = Assert.Throws<ArgumentParserException>(() => Parse<Args>("hello"));
+            var exception = Assert.Throws<ArgumentParserException<int>>(() => Parse<Args>("hello"));
 
             Assert.Contains("Unknown command", exception.Message);
         }
@@ -118,7 +117,7 @@ namespace ConsoleApplication3.Tests
         [InlineData("command --string:")]
         public void ShouldThrowForMissingValue(string arguments)
         {
-            var exception = Assert.Throws<ArgumentParserException>(() => Parse<Args>(arguments));
+            var exception = Assert.Throws<ArgumentParserException<int>>(() => Parse<Args>(arguments));
 
             Assert.Contains("requires a value", exception.Message);
         }
@@ -126,7 +125,7 @@ namespace ConsoleApplication3.Tests
         [Fact]
         public void ShouldThrowForUnknownOption()
         {
-            var exception = Assert.Throws<ArgumentParserException>(() => Parse<Args>("command --asdf"));
+            var exception = Assert.Throws<ArgumentParserException<int>>(() => Parse<Args>("command --asdf"));
 
             Assert.Contains("Unknown option", exception.Message);
         }
@@ -134,12 +133,12 @@ namespace ConsoleApplication3.Tests
         [Fact]
         public void ShouldThrowForEmptyArguments()
         {
-            var exception = Assert.Throws<ArgumentParserException>(() => Parse<Args>(string.Empty));
+            var exception = Assert.Throws<ArgumentParserException<int>>(() => Parse<Args>(string.Empty));
 
             Assert.Contains("Please specify a command", exception.Message);
         }
 
-        private static IReadOnlyDictionary<string, ICommandModel<int>> GetCommands(Action<IApplicationModelBuilder<int>> build)
+        private static IReadOnlyDictionary<string, Command<int>> GetCommands(Action<IApplicationBuilder<int>> build)
         {
             var config = new ApplicationConfiguration<int>
             {

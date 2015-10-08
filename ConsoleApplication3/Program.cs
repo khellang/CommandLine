@@ -16,8 +16,8 @@ namespace ConsoleApplication3
                     cmd.MapOption("s|string", x => x.String);
                     cmd.MapOption("i|integer", x => x.Integer);
                     cmd.MapOption("d|double", x => x.Double);
-                    cmd.MapOption("sl|string-list", x => x.StringList);
-                    cmd.MapOption("il|int-list", x => x.IntegerList);
+                    cmd.MapOption("string-list", x => x.StringList);
+                    cmd.MapOption("integer-list", x => x.IntegerList);
 
                     return args => 0;
                 });

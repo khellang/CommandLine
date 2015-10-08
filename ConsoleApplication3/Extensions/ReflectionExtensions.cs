@@ -8,7 +8,7 @@ namespace ConsoleApplication3.Extensions
     {
         public static bool IsEnumerable(this Type type)
         {
-            return type.HasGenericTypeDefinition(typeof(IEnumerable<>)) && type != typeof(string);
+            return type != typeof(string) && type.DerivesFromGenericTypeDefinition(typeof(IEnumerable<>));
         }
 
         public static Type GetGenericTypeArgument(this Type type)
@@ -16,19 +16,19 @@ namespace ConsoleApplication3.Extensions
             return type.IsGenericType ? type.GetGenericArguments().Single() : null;
         }
 
-        private static bool HasGenericTypeDefinition(this Type type, Type genericTypeDefinition)
+        private static bool DerivesFromGenericTypeDefinition(this Type type, Type genericTypeDefinition)
         {
             var interfaceTypes = type.GetInterfaces();
 
             foreach (var it in interfaceTypes)
             {
-                if (it.IsGenericType && it.GetGenericTypeDefinition() == genericTypeDefinition)
+                if (it.HasGenericTypeDefinition(genericTypeDefinition))
                 {
                     return true;
                 }
             }
 
-            if (type.IsGenericType && type.GetGenericTypeDefinition() == genericTypeDefinition)
+            if (type.HasGenericTypeDefinition(genericTypeDefinition))
             {
                 return true;
             }
@@ -40,7 +40,12 @@ namespace ConsoleApplication3.Extensions
                 return false;
             }
 
-            return HasGenericTypeDefinition(baseType, genericTypeDefinition);
+            return baseType.DerivesFromGenericTypeDefinition(genericTypeDefinition);
+        }
+
+        private static bool HasGenericTypeDefinition(this Type type, Type genericTypeDefinition)
+        {
+            return type.IsGenericType && type.GetGenericTypeDefinition() == genericTypeDefinition;
         }
     }
 }
