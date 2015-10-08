@@ -7,18 +7,18 @@ namespace ConsoleApplication3.Parsing
     [DebuggerDisplay("{ToString(), nq}")]
     internal struct ArgumentToken : IEquatable<ArgumentToken>
     {
-        private ArgumentToken(StringComparer comparer, string value, string modifier)
+        private ArgumentToken(string value, string modifier, StringComparer comparer)
         {
-            Comparer = comparer;
             Value = value;
             Modifier = modifier;
+            Comparer = comparer;
         }
-
-        public StringComparer Comparer { get; }
 
         public string Value { get; }
 
         public string Modifier { get; }
+
+        public StringComparer Comparer { get; }
 
         public bool IsLiteral => string.IsNullOrEmpty(Modifier);
 
@@ -28,7 +28,7 @@ namespace ConsoleApplication3.Parsing
         {
             if (IsSwitch && Value.Length > 1)
             {
-                tokens = Value.Select(option => Option(comparer, "-", option.ToString())).ToArray();
+                tokens = Value.Select(option => Option("-", option.ToString(), comparer)).ToArray();
                 return true;
             }
 
@@ -36,14 +36,14 @@ namespace ConsoleApplication3.Parsing
             return false;
         }
 
-        public static ArgumentToken Literal(StringComparer comparer, string value)
+        public static ArgumentToken Literal(string value, StringComparer comparer)
         {
-            return new ArgumentToken(comparer, value, string.Empty);
+            return new ArgumentToken(value, string.Empty, comparer);
         }
 
-        public static ArgumentToken Option(StringComparer comparer, string modifier, string name)
+        public static ArgumentToken Option(string modifier, string name, StringComparer comparer)
         {
-            return new ArgumentToken(comparer, name, modifier);
+            return new ArgumentToken(name, modifier, comparer);
         }
 
         public bool Equals(ArgumentToken other)

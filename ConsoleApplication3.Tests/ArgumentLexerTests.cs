@@ -71,12 +71,12 @@ namespace ConsoleApplication3.Tests
 
         private static ArgumentToken Literal(string value)
         {
-            return ArgumentToken.Literal(Config.StringComparer, value);
+            return ArgumentToken.Literal(value, Config.StringComparer);
         }
 
         private static ArgumentToken Option(string modifier, string name)
         {
-            return ArgumentToken.Option(Config.StringComparer, modifier, name);
+            return ArgumentToken.Option(modifier, name, Config.StringComparer);
         }
     }
 }

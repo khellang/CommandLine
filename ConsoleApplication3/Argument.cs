@@ -1,12 +1,10 @@
-using System.Diagnostics;
 using System.Reflection;
 
-namespace ConsoleApplication3.Model
+namespace ConsoleApplication3
 {
-    [DebuggerDisplay("{Name, nq}")]
-    internal class Option<TResult>
+    internal class Argument<TResult>
     {
-        public Option(ApplicationConfiguration<TResult> config, string name, PropertyInfo property)
+        public Argument(ApplicationConfiguration<TResult> config, string name, PropertyInfo property)
         {
             Config = config;
             Name = name;

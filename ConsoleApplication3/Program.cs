@@ -12,12 +12,14 @@ namespace ConsoleApplication3
             {
                 app.AddCommand<Pull>("command", cmd =>
                 {
-                    cmd.MapOption("b|boolean", x => x.Boolean);
-                    cmd.MapOption("s|string", x => x.String);
-                    cmd.MapOption("i|integer", x => x.Integer);
-                    cmd.MapOption("d|double", x => x.Double);
-                    cmd.MapOption("string-list", x => x.StringList);
-                    cmd.MapOption("integer-list", x => x.IntegerList);
+                    cmd.AddArgument("path", x => x.Path);
+
+                    cmd.AddOption("b|boolean", x => x.Boolean);
+                    cmd.AddOption("s|string", x => x.String);
+                    cmd.AddOption("i|integer", x => x.Integer);
+                    cmd.AddOption("d|double", x => x.Double);
+                    cmd.AddOption("string-list", x => x.StringList);
+                    cmd.AddOption("integer-list", x => x.IntegerList);
 
                     return args => 0;
                 });
@@ -26,6 +28,8 @@ namespace ConsoleApplication3
 
         private class Pull
         {
+            public string Path { get; set; }
+
             public bool Boolean { get; set; }
 
             public string String { get; set; }

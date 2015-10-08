@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using ConsoleApplication3.Model;
 using ConsoleApplication3.Parsing;
 using Xunit;
 
@@ -16,13 +15,13 @@ namespace ConsoleApplication3.Tests
             {
                 app.AddCommand<Args>("command", cmd =>
                 {
-                    cmd.MapOption("b|boolean", x => x.Boolean);
-                    cmd.MapOption("f|flag", x => x.Flag);
-                    cmd.MapOption("s|string", x => x.String);
-                    cmd.MapOption("i|integer", x => x.Integer);
-                    cmd.MapOption("d|double", x => x.Double);
-                    cmd.MapOption("string-list", x => x.StringList);
-                    cmd.MapOption("integer-list", x => x.IntegerList);
+                    cmd.AddOption("b|boolean", x => x.Boolean);
+                    cmd.AddOption("f|flag", x => x.Flag);
+                    cmd.AddOption("s|string", x => x.String);
+                    cmd.AddOption("i|integer", x => x.Integer);
+                    cmd.AddOption("d|double", x => x.Double);
+                    cmd.AddOption("string-list", x => x.StringList);
+                    cmd.AddOption("integer-list", x => x.IntegerList);
 
                     return args => 0;
                 });

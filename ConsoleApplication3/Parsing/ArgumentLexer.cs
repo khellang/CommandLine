@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using static ConsoleApplication3.Parsing.ArgumentToken;
 
 namespace ConsoleApplication3.Parsing
 {
@@ -26,7 +27,7 @@ namespace ConsoleApplication3.Parsing
             {
                 if (escapeOptions)
                 {
-                    tokens.Add(ArgumentToken.Literal(Config.StringComparer, arg));
+                    tokens.Add(Literal(arg, Config.StringComparer));
                     continue;
                 }
 
@@ -58,35 +59,34 @@ namespace ConsoleApplication3.Parsing
 
             string modifier;
             string nameValue;
-            if (TryParseOption(config, arg, out modifier, out nameValue))
+            if (TryParseOption(arg, out modifier, out nameValue))
             {
                 string name;
                 string value;
                 if (TrySplitNameValue(nameValue, out name, out value))
                 {
-                    tokens.Add(ArgumentToken.Option(config.StringComparer, modifier, name));
+                    tokens.Add(Option(modifier, name, config.StringComparer));
 
                     if (!string.IsNullOrEmpty(value))
                     {
-                        tokens.Add(ArgumentToken.Literal(config.StringComparer, value));
+                        tokens.Add(Literal(value, config.StringComparer));
                     }
                 }
                 else
                 {
-                    tokens.Add(ArgumentToken.Option(config.StringComparer, modifier, nameValue));
+                    tokens.Add(Option(modifier, nameValue, config.StringComparer));
                 }
             }
             else
             {
-                tokens.Add(ArgumentToken.Literal(config.StringComparer, arg));
+                tokens.Add(Literal(arg, config.StringComparer));
             }
 
             return tokens.ToArray();
         }
 
-        private static bool TryParseOption(ApplicationConfiguration<TResult> config, string arg, out string modifier, out string nameValue)
+        private static bool TryParseOption(string arg, out string modifier, out string nameValue)
         {
-            // TODO: Add option to customize modifiers.
             return TryParseOption(arg, "--", out modifier, out nameValue)
                 || TryParseOption(arg, "-", out modifier, out nameValue);
         }

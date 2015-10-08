@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using ConsoleApplication3.Extensions;
+using ConsoleApplication3.Model;
 
-namespace ConsoleApplication3.Model
+namespace ConsoleApplication3
 {
     internal sealed class ApplicationBuilder<TResult> : IApplicationBuilder<TResult>
     {
@@ -17,13 +19,20 @@ namespace ConsoleApplication3.Model
 
         public IApplicationBuilder<TResult> AddCommand<TArgs>(string name, Func<ICommandBuilder<TArgs, TResult>, Func<TArgs, TResult>> build)
         {
-            var builder = new CommandBuilder<TArgs, TResult>(Config, name);
+            var trimmed = name.Trim();
+
+            if (!trimmed.IsValidName())
+            {
+                throw new FormatException($"The command name '{trimmed}' is invalid.");
+            }
+
+            var builder = new CommandBuilder<TArgs, TResult>(Config, trimmed);
 
             var execute = build(builder);
 
             var command = builder.Build(execute);
 
-            Commands.Add(name, command);
+            Commands.Add(trimmed, command);
             return this;
         }
 

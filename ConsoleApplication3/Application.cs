@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using ConsoleApplication3.Model;
 using ConsoleApplication3.Parsing;
 
 namespace ConsoleApplication3

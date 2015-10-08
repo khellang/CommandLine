@@ -1,5 +1,4 @@
 ﻿using System;
-using ConsoleApplication3.Model;
 
 namespace ConsoleApplication3.Parsing
 {
