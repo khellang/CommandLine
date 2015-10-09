@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using ConsoleApplication3.Extensions;
 
 namespace ConsoleApplication3.Parsing
@@ -24,84 +25,82 @@ namespace ConsoleApplication3.Parsing
 
             var blankArgs = Config.ArgumentActivator(command.Type);
 
-            var parsedArgs = ParseOptions(tokenQueue, command, blankArgs);
+            var context = ParseOptions(new ParserContext(tokenQueue, command, blankArgs));
 
-            return new ArgumentParserResult<TResult>(parsedArgs, command);
+            return new ArgumentParserResult<TResult>(context.Args, command);
         }
 
-        private static object ParseOptions(Queue<ArgumentToken> tokens, Command<TResult> command, object args)
+        private static ParserContext ParseOptions(ParserContext context)
         {
-            if (tokens.Count == 0)
+            if (context.Tokens.Count == 0)
             {
                 // No options were specified.
-                return args;
+                return context;
             }
 
-            var token = tokens.Dequeue();
+            var token = context.Tokens.Dequeue();
 
             if (token.IsLiteral)
             {
-                // We expected an option, but found an argument, since
-                // we don't support positional arguments yet, we just throw.
-                throw new ArgumentParserException<TResult>($"Invalid argument: {token.Value}", command);
+                throw new ArgumentParserException<TResult>($"Invalid argument: {token.Value}", context.Command);
             }
 
             Option<TResult> option;
-            if (!command.Options.TryGetValue(token.Value, out option))
+            if (!context.Command.Options.TryGetValue(token.Value, out option))
             {
-                throw new ArgumentParserException<TResult>($"Unknown option: {token.Value}", command);
+                throw new ArgumentParserException<TResult>($"Unknown option: {token.Value}", context.Command);
             }
 
-            return ParseArguments(tokens, command, args, option);
+            return ParseOptionArguments(context.WithOption(option));
         }
 
-        private static object ParseArguments(Queue<ArgumentToken> tokens, Command<TResult> command, object args, Option<TResult> option)
+        private static ParserContext ParseOptionArguments(OptionParserContext context)
         {
-            if (NextIsLiteral(tokens))
+            if (NextIsLiteral(context.Tokens))
             {
-                var token = tokens.Dequeue();
+                var token = context.Tokens.Dequeue();
 
-                if (option.IsList())
+                if (context.Option.IsList())
                 {
                     var values = new List<string> { token.Value };
 
                     // We're expecting multiple arguments, continue.
-                    return ParseListArguments(tokens, command, args, option, values);
+                    return ParseOptionArgumentList(context.WithValues(values));
                 }
 
-                option.SetValue(args, token.Value);
+                context.Option.SetValue(context.Args, token.Value);
 
                 // Ok, we have our value. Start looking for options again.
-                return ParseOptions(tokens, command, args);
+                return ParseOptions(context);
             }
 
-            if (option.IsFlag())
+            if (context.Option.IsFlag())
             {
-                option.SetValue(args, "true");
+                context.Option.SetValue(context.Args, "true");
 
-                // There was not argument, but it's a flag, so we'll set it to true.
-                return ParseOptions(tokens, command, args);
+                // There was no argument, but it's a flag, so we'll set it to true.
+                return ParseOptions(context);
             }
 
-            throw new ArgumentParserException<TResult>($"Option '{option.Name}' requires a value", command);
+            throw new ArgumentParserException<TResult>($"Option '{context.Option.Name}' requires a value", context.Command);
         }
 
-        private static object ParseListArguments(Queue<ArgumentToken> tokens, Command<TResult> command, object args, Option<TResult> option, List<string> values)
+        private static ParserContext ParseOptionArgumentList(ArgumentParserContext context)
         {
-            if (NextIsLiteral(tokens))
+            if (NextIsLiteral(context.Tokens))
             {
-                var token = tokens.Dequeue();
+                var token = context.Tokens.Dequeue();
 
-                values.Add(token.Value);
+                context.Values.Add(token.Value);
 
                 // Look for more arguments.
-                return ParseListArguments(tokens, command, args, option, values);
+                return ParseOptionArgumentList(context);
             }
 
-            option.SetValues(args, values.ToArray());
+            context.Option.SetValues(context.Args, context.Values.ToArray());
 
             // We have our list arguments. Start looking for options again.
-            return ParseOptions(tokens, command, args);
+            return ParseOptions(context);
         }
 
         private static bool NextIsLiteral(Queue<ArgumentToken> tokens)
@@ -126,6 +125,54 @@ namespace ConsoleApplication3.Parsing
             }
 
             return command;
+        }
+
+        private class ParserContext
+        {
+            public ParserContext(Queue<ArgumentToken> tokens, Command<TResult> command, object args)
+            {
+                Tokens = tokens;
+                Command = command;
+                Args = args;
+            }
+
+            public Queue<ArgumentToken> Tokens { get; }
+
+            public Command<TResult> Command { get;}
+
+            public object Args { get; }
+
+            public OptionParserContext WithOption(Option<TResult> option)
+            {
+                return new OptionParserContext(Tokens, Command, Args, option);
+            }
+        }
+
+        private class OptionParserContext : ParserContext
+        {
+            public OptionParserContext(Queue<ArgumentToken> tokens, Command<TResult> command, object args, Option<TResult> option)
+                : base(tokens, command, args)
+            {
+                Option = option;
+            }
+
+            public Option<TResult> Option { get; }
+
+            public ArgumentParserContext WithValues(List<string> values)
+            {
+                return new ArgumentParserContext(Tokens, Command, Args, Option, values);
+            }
+        }
+
+        private class ArgumentParserContext : OptionParserContext
+        {
+            public ArgumentParserContext(Queue<ArgumentToken> tokens, Command<TResult> command, object args, Option<TResult> option, List<string> values)
+                : base(tokens, command, args, option)
+            {
+                Values = values;
+            }
+
+            public List<string> Values { get; }
         }
     }
 }
