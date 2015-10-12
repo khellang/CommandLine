@@ -15,18 +15,6 @@ namespace ConsoleApplication3.Extensions
             return string.Join("-", Splitter.Split(value.Trim()).Select(x => x.ToLower()));
         }
 
-        public static string TrimAndValidate(this string value, Func<string, bool> validate, string message)
-        {
-            var trimmed = value.Trim();
-
-            if (validate(trimmed))
-            {
-                return trimmed;
-            }
-
-            throw new FormatException(message);
-        }
-
         public static bool IsValidName(this string name)
         {
             if (string.IsNullOrEmpty(name))

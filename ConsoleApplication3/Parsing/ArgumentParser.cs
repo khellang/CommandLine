@@ -23,12 +23,14 @@ namespace ConsoleApplication3.Parsing
 
             var blankArgs = Config.ArgumentActivator(command.Type);
 
-            var context = ParseOptions(new ParserContext(tokenQueue, command, blankArgs));
+            var argumentQueue = new Queue<MappedProperty<TResult>>(command.Arguments);
+
+            var context = ParseOptions(new ParserContext<TResult>(command.Name, command.Options, argumentQueue, tokenQueue, blankArgs));
 
             return new ArgumentParserResult<TResult>(context.Args, command);
         }
 
-        private static ParserContext ParseOptions(ParserContext context)
+        private static ParserContext<TResult> ParseOptions(ParserContext<TResult> context)
         {
             if (context.Tokens.Count == 0)
             {
@@ -40,30 +42,28 @@ namespace ConsoleApplication3.Parsing
 
             if (token.IsLiteral)
             {
-                var argumentCount = context.Command.Arguments.Count;
-
-                if (argumentCount > 0 && context.ArgumentIndex < argumentCount)
+                if (context.Arguments.Count == 0)
                 {
-                    var argument = context.Command.Arguments[context.ArgumentIndex++];
-
-                    return ParseArguments(context.WithOption(argument));
+                    throw new ArgumentParserException($"Invalid argument: {token.Value}", context.CommandName);
                 }
 
-                throw new ArgumentParserException<TResult>($"Invalid argument: {token.Value}", context.Command);
+                var argument = context.Arguments.Dequeue();
+
+                return ParseArguments(context.WithOption(argument));
             }
 
             var optionToken = context.Tokens.Dequeue();
 
             MappedProperty<TResult> property;
-            if (!context.Command.Options.TryGetValue(optionToken.Value, out property))
+            if (!context.Options.TryGetValue(optionToken.Value, out property))
             {
-                throw new ArgumentParserException<TResult>($"Unknown option: {optionToken.Value}", context.Command);
+                throw new ArgumentParserException($"Unknown option: {optionToken.Value}", context.CommandName);
             }
 
             return ParseArguments(context.WithOption(property));
         }
 
-        private static ParserContext ParseArguments(OptionParserContext context)
+        private static ParserContext<TResult> ParseArguments(OptionParserContext<TResult> context)
         {
             if (NextIsLiteral(context.Tokens))
             {
@@ -91,10 +91,10 @@ namespace ConsoleApplication3.Parsing
                 return ParseOptions(context);
             }
 
-            throw new ArgumentParserException<TResult>($"Option '{context.Property.Name}' requires a value", context.Command);
+            throw new ArgumentParserException($"Option '{context.Property.Name}' requires a value", context.CommandName);
         }
 
-        private static ParserContext ParseArgumentsList(ArgumentParserContext context)
+        private static ParserContext<TResult> ParseArgumentsList(ArgumentParserContext<TResult> context)
         {
             if (NextIsLiteral(context.Tokens))
             {
@@ -122,7 +122,7 @@ namespace ConsoleApplication3.Parsing
             if (tokens.Count == 0)
             {
                 // TODO: No command was specified. Return help command.
-                throw new ArgumentParserException<TResult>("Please specify a command");
+                throw new ArgumentParserException("Please specify a command");
             }
 
             var commandToken = tokens.Dequeue();
@@ -130,60 +130,10 @@ namespace ConsoleApplication3.Parsing
             Command<TResult> command;
             if (!Commands.TryGetValue(commandToken.Value, out command))
             {
-                throw new ArgumentParserException<TResult>($"Unknown command: {commandToken.Value}");
+                throw new ArgumentParserException($"Unknown command: {commandToken.Value}");
             }
 
             return command;
-        }
-
-        private class ParserContext
-        {
-            public ParserContext(Queue<ArgumentToken> tokens, Command<TResult> command, object args)
-            {
-                Tokens = tokens;
-                Command = command;
-                Args = args;
-            }
-
-            public Queue<ArgumentToken> Tokens { get; }
-
-            public Command<TResult> Command { get;}
-
-            public object Args { get; }
-
-            public int ArgumentIndex { get; set; }
-
-            public OptionParserContext WithOption(MappedProperty<TResult> property)
-            {
-                return new OptionParserContext(Tokens, Command, Args, property);
-            }
-        }
-
-        private class OptionParserContext : ParserContext
-        {
-            public OptionParserContext(Queue<ArgumentToken> tokens, Command<TResult> command, object args, MappedProperty<TResult> property)
-                : base(tokens, command, args)
-            {
-                Property = property;
-            }
-
-            public MappedProperty<TResult> Property { get; }
-
-            public ArgumentParserContext WithValues(List<string> values)
-            {
-                return new ArgumentParserContext(Tokens, Command, Args, Property, values);
-            }
-        }
-
-        private class ArgumentParserContext : OptionParserContext
-        {
-            public ArgumentParserContext(Queue<ArgumentToken> tokens, Command<TResult> command, object args, MappedProperty<TResult> property, List<string> values)
-                : base(tokens, command, args, property)
-            {
-                Values = values;
-            }
-
-            public List<string> Values { get; }
         }
     }
 }

@@ -21,6 +21,8 @@ namespace ConsoleApplication3.Tests
                 app.AddCommand<Args>("int-list", cmd =>
                 {
                     cmd.AddOption("int-list", x => x.IntegerList);
+                    cmd.AddOption("s|string", x => x.String);
+
                     return NoOp;
                 });
 
@@ -117,9 +119,17 @@ namespace ConsoleApplication3.Tests
         }
 
         [Fact]
+        public void OptionTerminatesPositionalArgumentList()
+        {
+            var exception = Assert.Throws<ArgumentParserException>(() => Parse<Args>("int-list --int-list 1 2 3 -s hello 4 5"));
+
+            Assert.Contains("Invalid argument", exception.Message);
+        }
+
+        [Fact]
         public void ShouldThrowForInvalidArgumentType()
         {
-            var exception = Assert.Throws<ArgumentParserException<int>>(() => Parse<Args>("command -i hello"));
+            var exception = Assert.Throws<ArgumentParserException>(() => Parse<Args>("command -i hello"));
 
             Assert.Contains("Failed to parse option", exception.Message);
         }
@@ -127,7 +137,7 @@ namespace ConsoleApplication3.Tests
         [Fact]
         public void ShouldthrowForInvalidArgument()
         {
-            var exception = Assert.Throws<ArgumentParserException<int>>(() => Parse<Args>("no-arguments hello"));
+            var exception = Assert.Throws<ArgumentParserException>(() => Parse<Args>("no-arguments hello"));
 
             Assert.Contains("Invalid argument", exception.Message);
         }
@@ -135,7 +145,7 @@ namespace ConsoleApplication3.Tests
         [Fact]
         public void ShouldThrowForUnknownCommand()
         {
-            var exception = Assert.Throws<ArgumentParserException<int>>(() => Parse<Args>("hello"));
+            var exception = Assert.Throws<ArgumentParserException>(() => Parse<Args>("hello"));
 
             Assert.Contains("Unknown command", exception.Message);
         }
@@ -146,7 +156,7 @@ namespace ConsoleApplication3.Tests
         [InlineData("command --string:")]
         public void ShouldThrowForMissingValue(string arguments)
         {
-            var exception = Assert.Throws<ArgumentParserException<int>>(() => Parse<Args>(arguments));
+            var exception = Assert.Throws<ArgumentParserException>(() => Parse<Args>(arguments));
 
             Assert.Contains("requires a value", exception.Message);
         }
@@ -154,7 +164,7 @@ namespace ConsoleApplication3.Tests
         [Fact]
         public void ShouldThrowForUnknownOption()
         {
-            var exception = Assert.Throws<ArgumentParserException<int>>(() => Parse<Args>("command --asdf"));
+            var exception = Assert.Throws<ArgumentParserException>(() => Parse<Args>("command --asdf"));
 
             Assert.Contains("Unknown option", exception.Message);
         }
@@ -162,7 +172,7 @@ namespace ConsoleApplication3.Tests
         [Fact]
         public void ShouldThrowForEmptyArguments()
         {
-            var exception = Assert.Throws<ArgumentParserException<int>>(() => Parse<Args>(string.Empty));
+            var exception = Assert.Throws<ArgumentParserException>(() => Parse<Args>(string.Empty));
 
             Assert.Contains("Please specify a command", exception.Message);
         }

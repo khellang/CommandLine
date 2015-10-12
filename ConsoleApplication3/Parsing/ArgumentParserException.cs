@@ -2,9 +2,9 @@
 
 namespace ConsoleApplication3.Parsing
 {
-    public sealed class ArgumentParserException<TResult> : Exception
+    public sealed class ArgumentParserException : Exception
     {
-        internal ArgumentParserException(string message, Command<TResult> command = null)
-            : base(string.IsNullOrEmpty(command?.Name) ? message : $"{command.Name} - {message}") { }
+        internal ArgumentParserException(string message, string commandName = null)
+            : base(string.IsNullOrEmpty(commandName) ? message : $"{commandName} - {message}") { }
     }
 }

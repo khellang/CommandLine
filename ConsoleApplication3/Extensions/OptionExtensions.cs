@@ -55,7 +55,7 @@ namespace ConsoleApplication3.Extensions
             }
             catch (Exception ex)
             {
-                throw new ArgumentParserException<TResult>($"Failed to parse option '{property.Name}': {ex.Message}");
+                throw new ArgumentParserException($"Failed to parse option '{property.Name}': {ex.Message}");
             }
         }
     }
