@@ -13,25 +13,25 @@ namespace ConsoleApplication3.Extensions
 
         private static readonly Func<Type, Type> GenericListTypeFactory = type => typeof(List<>).MakeGenericType(type);
 
-        public static bool IsList<TResult>(this Option<TResult> option)
+        public static bool IsList<TResult>(this MappedProperty<TResult> property)
         {
-            return option.Property.PropertyType.IsEnumerable()
-                && option.Property.PropertyType != typeof(string);
+            return property.Property.PropertyType.IsEnumerable()
+                && property.Property.PropertyType != typeof(string);
         }
 
-        public static bool IsFlag<TResult>(this Option<TResult> option)
+        public static bool IsFlag<TResult>(this MappedProperty<TResult> property)
         {
-            return option.Property.PropertyType == typeof(bool);
+            return property.Property.PropertyType == typeof(bool);
         }
 
-        public static void SetValue<TResult>(this Option<TResult> option, object target, string value)
+        public static void SetValue<TResult>(this MappedProperty<TResult> property, object target, string value)
         {
-            option.Property.SetValue(target, option.ConvertValue(value, option.Property.PropertyType));
+            property.Property.SetValue(target, property.ConvertValue(value, property.Property.PropertyType));
         }
 
-        public static void SetValues<TResult>(this Option<TResult> option, object target, string[] values)
+        public static void SetValues<TResult>(this MappedProperty<TResult> property, object target, string[] values)
         {
-            var itemType = option.Property.PropertyType.GetGenericTypeArgument();
+            var itemType = property.Property.PropertyType.GetGenericTypeArgument();
 
             var genericType = GenericListTypes.GetOrAdd(itemType, GenericListTypeFactory);
 
@@ -39,23 +39,23 @@ namespace ConsoleApplication3.Extensions
 
             foreach (var value in values)
             {
-                list.Add(option.ConvertValue(value, itemType));
+                list.Add(property.ConvertValue(value, itemType));
             }
 
-            option.Property.SetValue(target, list);
+            property.Property.SetValue(target, list);
         }
 
-        private static object ConvertValue<TResult>(this Option<TResult> option, string value, Type type)
+        private static object ConvertValue<TResult>(this MappedProperty<TResult> property, string value, Type type)
         {
             var converter = TypeDescriptor.GetConverter(type);
 
             try
             {
-                return converter.ConvertFromString(null, option.Config.CultureInfo, value);
+                return converter.ConvertFromString(null, property.Config.CultureInfo, value);
             }
             catch (Exception ex)
             {
-                throw new ArgumentParserException<TResult>($"Failed to parse option '{option.Name}': {ex.Message}");
+                throw new ArgumentParserException<TResult>($"Failed to parse option '{property.Name}': {ex.Message}");
             }
         }
     }

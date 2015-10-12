@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using ConsoleApplication3.Extensions;
-using ConsoleApplication3.Model;
 
 namespace ConsoleApplication3
 {
@@ -13,9 +12,9 @@ namespace ConsoleApplication3
             Commands = new Dictionary<string, Command<TResult>>(config.StringComparer);
         }
 
-        private ApplicationConfiguration<TResult> Config { get; }
+        public ApplicationConfiguration<TResult> Config { get; }
 
-        private Dictionary<string, Command<TResult>> Commands { get; }
+        public Dictionary<string, Command<TResult>> Commands { get; }
 
         public IApplicationBuilder<TResult> AddCommand<TArgs>(string name, Func<ICommandBuilder<TArgs, TResult>, Func<TArgs, TResult>> build)
         {

@@ -47,7 +47,6 @@
     <Compile Include="Constants.cs" />
     <Compile Include="Extensions\OptionExtensions.cs" />
     <Compile Include="Extensions\StringExtensions.cs" />
-    <Compile Include="Argument.cs" />
     <Compile Include="Parsing\ArgumentParserException.cs" />
     <Compile Include="Parsing\ArgumentParserResult.cs" />
     <Compile Include="ApplicationBuilder.cs" />
@@ -60,7 +59,7 @@
     <Compile Include="IApplicationBuilder.cs" />
     <Compile Include="IOptionRegistry.cs" />
     <Compile Include="Parsing\ArgumentLexer.cs" />
-    <Compile Include="Option.cs" />
+    <Compile Include="MappedProperty.cs" />
     <Compile Include="Parsing\ArgumentParser.cs" />
     <Compile Include="Extensions\ReflectionExtensions.cs" />
     <Compile Include="Program.cs" />

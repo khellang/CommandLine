@@ -4,7 +4,7 @@ using System.Linq.Expressions;
 using System.Reflection;
 using ConsoleApplication3.Extensions;
 
-namespace ConsoleApplication3.Model
+namespace ConsoleApplication3
 {
     internal sealed class CommandBuilder<TArgs, TResult> : ICommandBuilder<TArgs, TResult>
     {
@@ -12,17 +12,17 @@ namespace ConsoleApplication3.Model
         {
             Config = config;
             Name = name;
-            Options = new Dictionary<string, Option<TResult>>(config.StringComparer);
-            Arguments = new List<Argument<TResult>>();
+            Options = new Dictionary<string, MappedProperty<TResult>>(config.StringComparer);
+            Arguments = new List<MappedProperty<TResult>>();
         }
 
         private ApplicationConfiguration<TResult> Config { get; }
 
         private string Name { get; }
 
-        private List<Argument<TResult>> Arguments { get; }
+        private List<MappedProperty<TResult>> Arguments { get; }
 
-        private Dictionary<string, Option<TResult>> Options { get; }
+        private Dictionary<string, MappedProperty<TResult>> Options { get; }
 
         public ICommandBuilder<TArgs, TResult> AddOption<TProperty>(string names, Expression<Func<TArgs, TProperty>> mapping)
         {
@@ -37,7 +37,7 @@ namespace ConsoleApplication3.Model
                     throw new FormatException($"The option name '{trimmed}' is invalid.");
                 }
 
-                Options.Add(trimmed, new Option<TResult>(Config, trimmed, property));
+                Options.Add(trimmed, new MappedProperty<TResult>(Config, trimmed, property));
             }
 
             return this;
@@ -54,7 +54,7 @@ namespace ConsoleApplication3.Model
                 throw new FormatException($"The argument name '{trimmed}' is invalid.");
             }
 
-            Arguments.Add(new Argument<TResult>(Config, trimmed, property));
+            Arguments.Add(new MappedProperty<TResult>(Config, trimmed, property));
 
             return this;
         }

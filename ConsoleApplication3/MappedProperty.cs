@@ -1,10 +1,12 @@
+using System.Diagnostics;
 using System.Reflection;
 
 namespace ConsoleApplication3
 {
-    internal class Argument<TResult>
+    [DebuggerDisplay("{Name, nq}")]
+    internal class MappedProperty<TResult>
     {
-        public Argument(ApplicationConfiguration<TResult> config, string name, PropertyInfo property)
+        public MappedProperty(ApplicationConfiguration<TResult> config, string name, PropertyInfo property)
         {
             Config = config;
             Name = name;

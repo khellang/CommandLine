@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using ConsoleApplication3.Parsing;
 using Xunit;
 
@@ -7,14 +8,26 @@ namespace ConsoleApplication3.Tests
 {
     public class ArgumentParserTests
     {
+        private static readonly Func<Args, int> NoOp = args => 0;
+
         public ArgumentParserTests()
         {
             var config = new ApplicationConfiguration<int>();
 
             var commands = GetCommands(app =>
             {
+                app.AddCommand<Args>("no-arguments", cmd => NoOp);
+
+                app.AddCommand<Args>("int-list", cmd =>
+                {
+                    cmd.AddOption("int-list", x => x.IntegerList);
+                    return NoOp;
+                });
+
                 app.AddCommand<Args>("command", cmd =>
                 {
+                    cmd.AddArgument("positional", x => x.PositionalString);
+
                     cmd.AddOption("b|boolean", x => x.Boolean);
                     cmd.AddOption("f|flag", x => x.Flag);
                     cmd.AddOption("s|string", x => x.String);
@@ -23,7 +36,7 @@ namespace ConsoleApplication3.Tests
                     cmd.AddOption("string-list", x => x.StringList);
                     cmd.AddOption("integer-list", x => x.IntegerList);
 
-                    return args => 0;
+                    return NoOp;
                 });
             });
 
@@ -82,8 +95,25 @@ namespace ConsoleApplication3.Tests
         {
             var result = Parse<Args>("command --integer-list 1 2 3 4 --string-list hello world");
 
-            Assert.Equal(new [] { 1, 2, 3, 4 }, result.IntegerList);
-            Assert.Equal(new [] { "hello", "world" }, result.StringList);
+            Assert.Equal(new [] { 1, 2, 3, 4 }.ToList(), result.IntegerList);
+            Assert.Equal(new [] { "hello", "world" }.ToList(), result.StringList);
+        }
+
+        [Fact]
+        public void ShouldParsePositionalArguments()
+        {
+            var result = Parse<Args>("command -s hello world");
+
+            Assert.Equal("world", result.PositionalString);
+        }
+
+        [Fact]
+        public void ShouldParsePositionalListArguments()
+        {
+            var result = Parse<Args>("int-list --int-list 1 2 3 4 5");
+
+            Assert.Equal(5, result.IntegerList.Count);
+            Assert.Equal(new[] { 1, 2, 3, 4, 5 }.ToList(), result.IntegerList);
         }
 
         [Fact]
@@ -95,9 +125,9 @@ namespace ConsoleApplication3.Tests
         }
 
         [Fact]
-        public void ShouldThrowForPositionalArguments()
+        public void ShouldthrowForInvalidArgument()
         {
-            var exception = Assert.Throws<ArgumentParserException<int>>(() => Parse<Args>("command -s hello world"));
+            var exception = Assert.Throws<ArgumentParserException<int>>(() => Parse<Args>("no-arguments hello"));
 
             Assert.Contains("Invalid argument", exception.Message);
         }
@@ -149,8 +179,13 @@ namespace ConsoleApplication3.Tests
 
         private T Parse<T>(string args)
         {
-            return (T) Parser.Parse(Lexer.Lex(args
-                .Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries))).Args;
+            var splitArgs = args.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+
+            var tokens = Lexer.Lex(splitArgs);
+
+            var result = Parser.Parse(tokens);
+
+            return (T) result.Args;
         }
 
         private class Args
@@ -165,9 +200,13 @@ namespace ConsoleApplication3.Tests
 
             public double Double { get; set; }
 
-            public IEnumerable<string> StringList { get; set; }
+            public string PositionalString { get; set; }
 
-            public IEnumerable<int> IntegerList { get; set; }
+            public IReadOnlyList<string> PositionalIntegerList { get; set; }
+
+            public IReadOnlyList<string> StringList { get; set; }
+
+            public IReadOnlyList<int> IntegerList { get; set; }
         }
     }
 }

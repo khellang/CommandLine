@@ -7,7 +7,7 @@ namespace ConsoleApplication3
     [DebuggerDisplay("{Name, nq}")]
     internal sealed class Command<TResult>
     {
-        public Command(Type type, string name, Func<object, TResult> execute, IReadOnlyDictionary<string, Option<TResult>> options, IReadOnlyList<Argument<TResult>> arguments)
+        public Command(Type type, string name, Func<object, TResult> execute, IReadOnlyDictionary<string, MappedProperty<TResult>> options, IReadOnlyList<MappedProperty<TResult>> arguments)
         {
             Type = type;
             Name = name;
@@ -22,8 +22,8 @@ namespace ConsoleApplication3
 
         public Func<object, TResult> Execute { get; }
 
-        public IReadOnlyDictionary<string, Option<TResult>> Options { get; }
+        public IReadOnlyDictionary<string, MappedProperty<TResult>> Options { get; }
 
-        public IReadOnlyList<Argument<TResult>> Arguments { get; }
+        public IReadOnlyList<MappedProperty<TResult>> Arguments { get; }
     }
 }
