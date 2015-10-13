@@ -20,7 +20,7 @@ namespace ConsoleApplication3.Tests
 
                 app.AddCommand<Args>("int-list", cmd =>
                 {
-                    cmd.AddOption("int-list", x => x.IntegerList);
+                    cmd.AddArgument("int-list", x => x.PositionalIntegerList);
                     cmd.AddOption("s|string", x => x.String);
 
                     return NoOp;
@@ -112,16 +112,16 @@ namespace ConsoleApplication3.Tests
         [Fact]
         public void ShouldParsePositionalListArguments()
         {
-            var result = Parse<Args>("int-list --int-list 1 2 3 4 5");
+            var result = Parse<Args>("int-list 1 2 3 4 5");
 
-            Assert.Equal(5, result.IntegerList.Count);
-            Assert.Equal(new[] { 1, 2, 3, 4, 5 }.ToList(), result.IntegerList);
+            Assert.Equal(5, result.PositionalIntegerList.Count);
+            Assert.Equal(new[] { 1, 2, 3, 4, 5 }.ToList(), result.PositionalIntegerList);
         }
 
         [Fact]
         public void OptionTerminatesPositionalArgumentList()
         {
-            var exception = Assert.Throws<ArgumentParserException>(() => Parse<Args>("int-list --int-list 1 2 3 -s hello 4 5"));
+            var exception = Assert.Throws<ArgumentParserException>(() => Parse<Args>("int-list 1 2 3 -s hello 4 5"));
 
             Assert.Contains("Invalid argument", exception.Message);
         }
@@ -212,7 +212,7 @@ namespace ConsoleApplication3.Tests
 
             public string PositionalString { get; set; }
 
-            public IReadOnlyList<string> PositionalIntegerList { get; set; }
+            public IReadOnlyList<int> PositionalIntegerList { get; set; }
 
             public IReadOnlyList<string> StringList { get; set; }
 
