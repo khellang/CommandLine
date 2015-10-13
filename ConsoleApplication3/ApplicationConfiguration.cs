@@ -1,13 +1,13 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Globalization;
+using System.IO;
+using System.Linq;
+using System.Text;
 
 namespace ConsoleApplication3
 {
-    public class ApplicationConfiguration
-    {
-    }
-
-    public class ApplicationConfiguration<TResult> : ApplicationConfiguration
+    public class ApplicationConfiguration<TResult>
     {
         public ApplicationConfiguration()
         {
@@ -16,6 +16,8 @@ namespace ConsoleApplication3
             ArgumentActivator = DefaultActivator;
             StringComparer = StringComparer.Ordinal;
             CultureInfo = CultureInfo.InvariantCulture;
+            ResponseFileReader = DefaultResponseFileReader;
+            ResponseFileEncoding = Encoding.UTF8;
             Conventions = new ApplicationConfigurationConventions();
         }
 
@@ -27,7 +29,11 @@ namespace ConsoleApplication3
 
         public Func<Exception, TResult> ErrorHandler { get; set; }
 
-        public ApplicationConfigurationConventions Conventions { get; protected set; }
+        public Func<string, IEnumerable<string>> ResponseFileReader { get; set; }
+
+        public Encoding ResponseFileEncoding { get; set; } 
+
+        public ApplicationConfigurationConventions Conventions { get; }
 
         internal bool HandleErrors { get; set; }
 
@@ -45,6 +51,16 @@ namespace ConsoleApplication3
         private static object DefaultActivator(Type type)
         {
             return Activator.CreateInstance(type);
+        }
+
+        public IEnumerable<string> DefaultResponseFileReader(string path)
+        {
+            if (File.Exists(path))
+            {
+                return File.ReadAllLines(path, ResponseFileEncoding).SelectMany(x => x.Split(' '));
+            }
+
+            throw new FileNotFoundException($"Could not find response file '{path}'");
         }
     }
 }

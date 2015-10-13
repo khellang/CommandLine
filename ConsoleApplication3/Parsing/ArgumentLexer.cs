@@ -1,4 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 using static ConsoleApplication3.Parsing.ArgumentToken;
 
 namespace ConsoleApplication3.Parsing
@@ -23,7 +26,7 @@ namespace ConsoleApplication3.Parsing
 
             var escapeOptions = false;
 
-            foreach (var arg in args)
+            foreach (var arg in ExpandResponseFiles(args, Config.ResponseFileReader))
             {
                 if (escapeOptions)
                 {
@@ -40,7 +43,7 @@ namespace ConsoleApplication3.Parsing
                 foreach (var token in ParseTokens(Config, arg))
                 {
                     ArgumentToken[] exploded;
-                    if (token.TryExplodeSwitchGroup(Config.StringComparer, out exploded))
+                    if (TryExpandSwitchGroup(token, Config.StringComparer, out exploded))
                     {
                         tokens.AddRange(exploded);
                         continue;
@@ -51,6 +54,45 @@ namespace ConsoleApplication3.Parsing
             }
 
             return tokens.ToArray();
+        }
+
+        private static IEnumerable<string> ExpandResponseFiles(IEnumerable<string> args, Func<string, IEnumerable<string>> reader, string directory = null)
+        {
+            foreach (var arg in args)
+            {
+                if (arg.StartsWith("@"))
+                {
+                    var path = arg.Substring(1);
+
+                    var fullPath = Path.Combine(directory ?? string.Empty, path);
+
+                    if (string.IsNullOrEmpty(directory))
+                    {
+                        directory = Path.GetDirectoryName(path);
+                    }
+
+                    foreach (var expandedArg in ExpandResponseFiles(reader(fullPath), reader, directory))
+                    {
+                        yield return Environment.ExpandEnvironmentVariables(expandedArg).Trim();
+                    }
+                }
+                else
+                {
+                    yield return arg;
+                }
+            }
+        }
+
+        private static bool TryExpandSwitchGroup(ArgumentToken token, StringComparer comparer, out ArgumentToken[] tokens)
+        {
+            if (token.IsSwitch && token.Value.Length > 1)
+            {
+                tokens = token.Value.Select(option => Option("-", option.ToString(), comparer)).ToArray();
+                return true;
+            }
+
+            tokens = null;
+            return false;
         }
 
         private static ArgumentToken[] ParseTokens(ApplicationConfiguration<TResult> config, string arg)

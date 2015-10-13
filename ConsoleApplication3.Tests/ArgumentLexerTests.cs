@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using ConsoleApplication3.Parsing;
 using Xunit;
 
@@ -20,6 +21,20 @@ namespace ConsoleApplication3.Tests
         public void ShouldLexOptions()
         {
             Lex("-a --test", Option("-", "a"), Option("--", "test"));
+        }
+
+        [Fact]
+        public void ShouldLexResponseFiles()
+        {
+            Lex(Path.Combine("@ResponseFiles", "test.rsp"),
+                Option("-", "s"),
+                Literal("hello"),
+                Literal("1"),
+                Literal("2"),
+                Literal("3"),
+                Literal("4"),
+                Literal("5"),
+                Literal("6"));
         }
 
         [Fact]

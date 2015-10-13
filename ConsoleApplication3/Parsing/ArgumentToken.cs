@@ -22,19 +22,7 @@ namespace ConsoleApplication3.Parsing
 
         public bool IsLiteral => string.IsNullOrEmpty(Modifier);
 
-        private bool IsSwitch => Modifier == "-";
-
-        public bool TryExplodeSwitchGroup(StringComparer comparer, out ArgumentToken[] tokens)
-        {
-            if (IsSwitch && Value.Length > 1)
-            {
-                tokens = Value.Select(option => Option("-", option.ToString(), comparer)).ToArray();
-                return true;
-            }
-
-            tokens = null;
-            return false;
-        }
+        public bool IsSwitch => Modifier == "-";
 
         public static ArgumentToken Literal(string value, StringComparer comparer)
         {
