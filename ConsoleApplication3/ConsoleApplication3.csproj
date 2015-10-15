@@ -45,7 +45,7 @@
     <Compile Include="ApplicationBuilder.cs" />
     <Compile Include="ArgumentRegistry.cs" />
     <Compile Include="CommandRegistry.cs" />
-    <Compile Include="ApplicationConfigurationConventions.cs" />
+    <Compile Include="ConfigurationConventions.cs" />
     <Compile Include="Constants.cs" />
     <Compile Include="Extensions\OptionExtensions.cs" />
     <Compile Include="Extensions\StringExtensions.cs" />
@@ -62,7 +62,7 @@
     <Compile Include="Parsing\ArgumentToken.cs" />
     <Compile Include="CommandBuilder.cs" />
     <Compile Include="Command.cs" />
-    <Compile Include="ApplicationConfiguration.cs" />
+    <Compile Include="Configuration.cs" />
     <Compile Include="Extensions\ExpressionExtensions.cs" />
     <Compile Include="Parsing\ArgumentLexer.cs" />
     <Compile Include="MappedProperty.cs" />

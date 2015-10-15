@@ -7,7 +7,7 @@ namespace ConsoleApplication3.Tests
 {
     public class ArgumentLexerTests
     {
-        private static ApplicationConfiguration<int> Config { get; } = new ApplicationConfiguration<int>();
+        private static Configuration<int> Config { get; } = new Configuration<int>();
 
         private ArgumentLexer<int> Lexer { get; } = new ArgumentLexer<int>(Config);
 

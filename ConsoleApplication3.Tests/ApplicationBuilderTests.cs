@@ -7,7 +7,7 @@ namespace ConsoleApplication3.Tests
     {
         private static readonly Func<object, int> NoOp = _ => 0;
 
-        private readonly ApplicationBuilder<int> _builder = new ApplicationBuilder<int>(new ApplicationConfiguration<int>());
+        private readonly ApplicationBuilder<int> _builder = new ApplicationBuilder<int>(new Configuration<int>());
 
         [Theory]
         [InlineData("hello", "hello")]

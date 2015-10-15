@@ -8,12 +8,12 @@ namespace ConsoleApplication3.Parsing
 {
     internal class ArgumentLexer<TResult>
     {
-        public ArgumentLexer(ApplicationConfiguration<TResult> config)
+        public ArgumentLexer(Configuration<TResult> config)
         {
             Config = config;
         }
 
-        private ApplicationConfiguration<TResult> Config { get; }
+        private Configuration<TResult> Config { get; }
 
         public ArgumentToken[] Lex(string[] args)
         {
@@ -95,7 +95,7 @@ namespace ConsoleApplication3.Parsing
             return false;
         }
 
-        private static ArgumentToken[] ParseTokens(ApplicationConfiguration<TResult> config, string arg)
+        private static ArgumentToken[] ParseTokens(Configuration<TResult> config, string arg)
         {
             var tokens = new List<ArgumentToken>(capacity: 2);
 

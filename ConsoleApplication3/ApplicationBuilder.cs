@@ -4,13 +4,13 @@ namespace ConsoleApplication3
 {
     internal class ApplicationBuilder<TResult> : IApplicationBuilder<TResult>
     {
-        public ApplicationBuilder(ApplicationConfiguration<TResult> config)
+        public ApplicationBuilder(Configuration<TResult> config)
         {
             Config = config;
             CommandRegistry = new CommandRegistry<TResult, IApplicationBuilder<TResult>>(this);
         }
 
-        public ApplicationConfiguration<TResult> Config { get; }
+        public Configuration<TResult> Config { get; }
 
         public CommandRegistry<TResult, IApplicationBuilder<TResult>> CommandRegistry { get; }
 
@@ -27,7 +27,7 @@ namespace ConsoleApplication3
 
     internal class ApplicationBuilder<TAppArgs, TResult> : IApplicationBuilder<TAppArgs, TResult>
     {
-        public ApplicationBuilder(ApplicationConfiguration<TResult> config)
+        public ApplicationBuilder(Configuration<TResult> config)
         {
             Config = config;
             CommandRegistry = new CommandRegistry<TResult, IApplicationBuilder<TAppArgs, TResult>>(this);
@@ -35,7 +35,7 @@ namespace ConsoleApplication3
             ArgumentRegistry = new ArgumentRegistry<TAppArgs, TResult, IApplicationBuilder<TAppArgs, TResult>>(this);
         }
 
-        public ApplicationConfiguration<TResult> Config { get; }
+        public Configuration<TResult> Config { get; }
 
         public CommandRegistry<TResult, IApplicationBuilder<TAppArgs, TResult>> CommandRegistry { get; }
 

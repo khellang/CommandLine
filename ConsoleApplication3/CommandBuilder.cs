@@ -5,7 +5,7 @@ namespace ConsoleApplication3
 {
     internal class CommandBuilder<TArgs, TResult> : ICommandBuilder<TArgs, TResult>
     {
-        public CommandBuilder(ApplicationConfiguration<TResult> config, string name)
+        public CommandBuilder(Configuration<TResult> config, string name)
         {
             Config = config;
             Name = name;
@@ -13,7 +13,7 @@ namespace ConsoleApplication3
             ArgumentRegistry = new ArgumentRegistry<TArgs, TResult, ICommandBuilder<TArgs, TResult>>(this);
         }
 
-        public ApplicationConfiguration<TResult> Config { get; }
+        public Configuration<TResult> Config { get; }
 
         public string Name { get; }
 

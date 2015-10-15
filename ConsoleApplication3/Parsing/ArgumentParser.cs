@@ -5,13 +5,13 @@ namespace ConsoleApplication3.Parsing
 {
     internal class ArgumentParser<TResult>
     {
-        public ArgumentParser(ApplicationConfiguration<TResult> config, IReadOnlyDictionary<string, Command<TResult>> commands)
+        public ArgumentParser(Configuration<TResult> config, IReadOnlyDictionary<string, Command<TResult>> commands)
         {
             Config = config;
             Commands = commands;
         }
 
-        private ApplicationConfiguration<TResult> Config { get; }
+        private Configuration<TResult> Config { get; }
 
         private IReadOnlyDictionary<string, Command<TResult>> Commands { get; }
 

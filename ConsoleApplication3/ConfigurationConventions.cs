@@ -4,9 +4,9 @@ using ConsoleApplication3.Extensions;
 
 namespace ConsoleApplication3
 {
-    public class ApplicationConfigurationConventions
+    public class ConfigurationConventions
     {
-        public ApplicationConfigurationConventions()
+        public ConfigurationConventions()
         {
             OptionNames = GetOptionNames;
         }

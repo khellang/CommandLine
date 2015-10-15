@@ -7,9 +7,9 @@ using System.Text;
 
 namespace ConsoleApplication3
 {
-    public class ApplicationConfiguration<TResult>
+    public class Configuration<TResult>
     {
-        public ApplicationConfiguration()
+        public Configuration()
         {
             HandleErrors = true;
             ErrorHandler = DefaultErrorHandler;
@@ -18,7 +18,7 @@ namespace ConsoleApplication3
             CultureInfo = CultureInfo.InvariantCulture;
             ResponseFileReader = DefaultResponseFileReader;
             ResponseFileEncoding = Encoding.UTF8;
-            Conventions = new ApplicationConfigurationConventions();
+            Conventions = new ConfigurationConventions();
         }
 
         public CultureInfo CultureInfo { get; set; }
@@ -31,9 +31,9 @@ namespace ConsoleApplication3
 
         public Func<string, IEnumerable<string>> ResponseFileReader { get; set; }
 
-        public Encoding ResponseFileEncoding { get; set; } 
+        public Encoding ResponseFileEncoding { get; set; }
 
-        public ApplicationConfigurationConventions Conventions { get; }
+        public ConfigurationConventions Conventions { get; }
 
         internal bool HandleErrors { get; set; }
 

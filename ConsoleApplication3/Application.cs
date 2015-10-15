@@ -6,17 +6,17 @@ namespace ConsoleApplication3
 {
     public static class Application
     {
-        public static TResult Run<TResult>(ApplicationConfiguration<TResult> config, string[] args, Action<IApplicationBuilder<TResult>> build)
+        public static TResult Run<TResult>(Configuration<TResult> config, string[] args, Action<IApplicationBuilder<TResult>> build)
         {
             return Create(config, build).Run(args);
         }
 
-        public static TResult Run<TArgs, TResult>(ApplicationConfiguration<TResult> config, string[] args, Func<IApplicationBuilder<TArgs, TResult>, Func<TArgs, TResult>> build)
+        public static TResult Run<TArgs, TResult>(Configuration<TResult> config, string[] args, Func<IApplicationBuilder<TArgs, TResult>, Func<TArgs, TResult>> build)
         {
             return Create(config, build).Run(args);
         }
 
-        internal static Application<TResult> Create<TResult>(ApplicationConfiguration<TResult> config, Action<IApplicationBuilder<TResult>> build)
+        internal static Application<TResult> Create<TResult>(Configuration<TResult> config, Action<IApplicationBuilder<TResult>> build)
         {
             var builder = new ApplicationBuilder<TResult>(config);
 
@@ -25,7 +25,7 @@ namespace ConsoleApplication3
             return builder.Build();
         }
 
-        internal static Application<TResult> Create<TArgs, TResult>(ApplicationConfiguration<TResult> config, Func<IApplicationBuilder<TArgs, TResult>, Func<TArgs, TResult>> build)
+        internal static Application<TResult> Create<TArgs, TResult>(Configuration<TResult> config, Func<IApplicationBuilder<TArgs, TResult>, Func<TArgs, TResult>> build)
         {
             var builder = new ApplicationBuilder<TArgs, TResult>(config);
 
@@ -37,13 +37,13 @@ namespace ConsoleApplication3
 
     internal class Application<TResult>
     {
-        public Application(ApplicationConfiguration<TResult> config, IReadOnlyDictionary<string, Command<TResult>> commands)
+        public Application(Configuration<TResult> config, IReadOnlyDictionary<string, Command<TResult>> commands)
         {
             Config = config;
             Commands = commands;
         }
 
-        private ApplicationConfiguration<TResult> Config { get; }
+        private Configuration<TResult> Config { get; }
 
         public IReadOnlyDictionary<string, Command<TResult>> Commands { get; }
 

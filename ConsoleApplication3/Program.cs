@@ -6,7 +6,7 @@ namespace ConsoleApplication3
     {
         public static int Main(string[] args)
         {
-            var config = new ApplicationConfiguration<int>();
+            var config = new Configuration<int>();
 
             return Application.Run<Pull, int>(config, args, app =>
             {

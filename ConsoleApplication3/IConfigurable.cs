@@ -2,6 +2,6 @@
 {
     public interface IConfigurable<TResult>
     {
-        ApplicationConfiguration<TResult> Config { get; }
+        Configuration<TResult> Config { get; }
     }
 }

@@ -12,7 +12,7 @@ namespace ConsoleApplication3.Tests
 
         public ArgumentParserTests()
         {
-            var config = new ApplicationConfiguration<int>();
+            var config = new Configuration<int>();
 
             var commands = GetCommands(app =>
             {
@@ -179,7 +179,7 @@ namespace ConsoleApplication3.Tests
 
         private static IReadOnlyDictionary<string, Command<int>> GetCommands(Action<IApplicationBuilder<int>> build)
         {
-            var config = new ApplicationConfiguration<int>
+            var config = new Configuration<int>
             {
                 HandleErrors = false
             };
