@@ -11,6 +11,11 @@ namespace ConsoleApplication3
             return Create(config, build).Run(args);
         }
 
+        public static TResult Run<TArgs, TResult>(ApplicationConfiguration<TResult> config, string[] args, Func<IApplicationBuilder<TArgs, TResult>, Func<TArgs, TResult>> build)
+        {
+            return Create(config, build).Run(args);
+        }
+
         internal static Application<TResult> Create<TResult>(ApplicationConfiguration<TResult> config, Action<IApplicationBuilder<TResult>> build)
         {
             var builder = new ApplicationBuilder<TResult>(config);
@@ -18,6 +23,15 @@ namespace ConsoleApplication3
             build(builder);
 
             return builder.Build();
+        }
+
+        internal static Application<TResult> Create<TArgs, TResult>(ApplicationConfiguration<TResult> config, Func<IApplicationBuilder<TArgs, TResult>, Func<TArgs, TResult>> build)
+        {
+            var builder = new ApplicationBuilder<TArgs, TResult>(config);
+
+            var execute = build(builder);
+
+            return builder.Build(execute);
         }
     }
 

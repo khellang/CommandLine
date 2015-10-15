@@ -19,8 +19,8 @@ namespace ConsoleApplication3.Tests
             _builder.AddCommand<object>(actual, _ => NoOp);
 
             Command<int> command;
-            Assert.Equal(1, _builder.Commands.Count);
-            Assert.True(_builder.Commands.TryGetValue(result, out command));
+            Assert.Equal(1, _builder.CommandRegistry.Commands.Count);
+            Assert.True(_builder.CommandRegistry.Commands.TryGetValue(result, out command));
         }
 
         [Fact]

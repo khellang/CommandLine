@@ -5,7 +5,7 @@ using System.Diagnostics;
 namespace ConsoleApplication3
 {
     [DebuggerDisplay("{Name, nq}")]
-    internal sealed class Command<TResult>
+    internal class Command<TResult>
     {
         public Command(Type type, string name, Func<object, TResult> execute, IReadOnlyDictionary<string, MappedProperty<TResult>> options, IReadOnlyList<MappedProperty<TResult>> arguments)
         {

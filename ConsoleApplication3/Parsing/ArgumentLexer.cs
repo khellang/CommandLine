@@ -6,7 +6,7 @@ using static ConsoleApplication3.Parsing.ArgumentToken;
 
 namespace ConsoleApplication3.Parsing
 {
-    internal sealed class ArgumentLexer<TResult>
+    internal class ArgumentLexer<TResult>
     {
         public ArgumentLexer(ApplicationConfiguration<TResult> config)
         {

@@ -4,11 +4,11 @@ namespace ConsoleApplication3
 {
     public static class Program
     {
-        public static int Main(string[] stringArgs)
+        public static int Main(string[] args)
         {
             var config = new ApplicationConfiguration<int>();
 
-            return Application.Run<int>(config, stringArgs, app =>
+            return Application.Run<Pull, int>(config, args, app =>
             {
                 app.AddCommand<Pull>("command", cmd =>
                 {
@@ -21,9 +21,16 @@ namespace ConsoleApplication3
                     cmd.AddOption("string-list", x => x.StringList);
                     cmd.AddOption("integer-list", x => x.IntegerList);
 
-                    return args => 0;
+                    return NoOp;
                 });
+
+                return NoOp;
             });
+        }
+
+        private static int NoOp<T>(T args)
+        {
+            return 0;
         }
 
         private class Pull

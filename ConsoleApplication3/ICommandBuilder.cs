@@ -1,10 +1,9 @@
-﻿using System;
-using System.Linq.Expressions;
-
 namespace ConsoleApplication3
 {
-    public interface ICommandBuilder<TArgs, TResult> : IOptionRegistry<TArgs, TResult, ICommandBuilder<TArgs, TResult>>
+    public interface ICommandBuilder<TArgs, TResult> :
+        IOptionRegistry<TArgs, ICommandBuilder<TArgs, TResult>>,
+        IArgumentRegistry<TArgs, ICommandBuilder<TArgs, TResult>>,
+        IConfigurable<TResult>
     {
-        ICommandBuilder<TArgs, TResult> AddArgument<TProperty>(string name, Expression<Func<TArgs, TProperty>> mapping);
     }
 }

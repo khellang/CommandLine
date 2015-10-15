@@ -38,27 +38,32 @@
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
-    <Reference Include="System.Net.Http" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Application.cs" />
+    <Compile Include="ApplicationBuilder.cs" />
+    <Compile Include="ArgumentRegistry.cs" />
+    <Compile Include="CommandRegistry.cs" />
     <Compile Include="ApplicationConfigurationConventions.cs" />
     <Compile Include="Constants.cs" />
     <Compile Include="Extensions\OptionExtensions.cs" />
     <Compile Include="Extensions\StringExtensions.cs" />
+    <Compile Include="IApplicationBuilder.cs" />
+    <Compile Include="IArgumentRegistry.cs" />
+    <Compile Include="ICommandBuilder.cs" />
+    <Compile Include="ICommandRegistry.cs" />
+    <Compile Include="IConfigurable.cs" />
+    <Compile Include="IOptionRegistry.cs" />
+    <Compile Include="OptionRegistry.cs" />
     <Compile Include="Parsing\ArgumentParserContext.cs" />
     <Compile Include="Parsing\ArgumentParserException.cs" />
     <Compile Include="Parsing\ArgumentParserResult.cs" />
-    <Compile Include="ApplicationBuilder.cs" />
     <Compile Include="Parsing\ArgumentToken.cs" />
     <Compile Include="CommandBuilder.cs" />
     <Compile Include="Command.cs" />
     <Compile Include="ApplicationConfiguration.cs" />
     <Compile Include="Extensions\ExpressionExtensions.cs" />
-    <Compile Include="ICommandBuilder.cs" />
-    <Compile Include="IApplicationBuilder.cs" />
-    <Compile Include="IOptionRegistry.cs" />
     <Compile Include="Parsing\ArgumentLexer.cs" />
     <Compile Include="MappedProperty.cs" />
     <Compile Include="Parsing\ArgumentParser.cs" />

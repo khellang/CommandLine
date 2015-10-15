@@ -3,7 +3,7 @@ using ConsoleApplication3.Extensions;
 
 namespace ConsoleApplication3.Parsing
 {
-    internal sealed class ArgumentParser<TResult>
+    internal class ArgumentParser<TResult>
     {
         public ArgumentParser(ApplicationConfiguration<TResult> config, IReadOnlyDictionary<string, Command<TResult>> commands)
         {
@@ -119,15 +119,21 @@ namespace ConsoleApplication3.Parsing
 
         private Command<TResult> GetCommand(Queue<ArgumentToken> tokens)
         {
+            Command<TResult> command;
+
             if (tokens.Count == 0)
             {
-                // TODO: No command was specified. Return help command.
-                throw new ArgumentParserException("Please specify a command");
+                if (!Commands.TryGetValue(string.Empty, out command))
+                {
+                    // TODO: No command was specified. Return help command.
+                    throw new ArgumentParserException("Please specify a command");
+                }
+
+                return command;
             }
 
             var commandToken = tokens.Dequeue();
 
-            Command<TResult> command;
             if (!Commands.TryGetValue(commandToken.Value, out command))
             {
                 throw new ArgumentParserException($"Unknown command: {commandToken.Value}");
