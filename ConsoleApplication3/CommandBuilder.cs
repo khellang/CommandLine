@@ -21,14 +21,14 @@ namespace ConsoleApplication3
 
         public ArgumentRegistry<TArgs, TResult, ICommandBuilder<TArgs, TResult>> ArgumentRegistry { get; }
 
-        public ICommandBuilder<TArgs, TResult> AddOption<TProperty>(string names, Expression<Func<TArgs, TProperty>> mapping)
+        public ICommandBuilder<TArgs, TResult> Option<TProperty>(string names, Expression<Func<TArgs, TProperty>> mapping)
         {
-            return OptionRegistry.AddOption(names, mapping);
+            return OptionRegistry.Option(names, mapping);
         }
 
-        public ICommandBuilder<TArgs, TResult> AddArgument<TProperty>(string name, Expression<Func<TArgs, TProperty>> mapping)
+        public ICommandBuilder<TArgs, TResult> Argument<TProperty>(string name, Expression<Func<TArgs, TProperty>> mapping)
         {
-            return ArgumentRegistry.AddArgument(name, mapping);
+            return ArgumentRegistry.Argument(name, mapping);
         }
 
         public Command<TResult> Build(Func<TArgs, TResult> execute)

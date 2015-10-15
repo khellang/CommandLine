@@ -18,7 +18,7 @@ namespace ConsoleApplication3
 
         public Dictionary<string, MappedProperty<TResult>> Options { get; }
 
-        public TBuilder AddOption<TProperty>(string names, Expression<Func<TArgs, TProperty>> mapping)
+        public TBuilder Option<TProperty>(string names, Expression<Func<TArgs, TProperty>> mapping)
         {
             var property = mapping.GetWritableProperty();
 

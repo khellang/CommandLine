@@ -18,7 +18,7 @@ namespace ConsoleApplication3
 
         public List<MappedProperty<TResult>> Arguments { get; }
 
-        public TBuilder AddArgument<TProperty>(string name, Expression<Func<TArgs, TProperty>> mapping)
+        public TBuilder Argument<TProperty>(string name, Expression<Func<TArgs, TProperty>> mapping)
         {
             var property = mapping.GetWritableProperty();
 

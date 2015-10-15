@@ -12,14 +12,14 @@ namespace ConsoleApplication3
             {
                 app.AddCommand<Pull>("command", cmd =>
                 {
-                    cmd.AddArgument("path", x => x.Path);
+                    cmd.Argument("path", x => x.Path);
 
-                    cmd.AddOption("b|boolean", x => x.Boolean);
-                    cmd.AddOption("s|string", x => x.String);
-                    cmd.AddOption("i|integer", x => x.Integer);
-                    cmd.AddOption("d|double", x => x.Double);
-                    cmd.AddOption("string-list", x => x.StringList);
-                    cmd.AddOption("integer-list", x => x.IntegerList);
+                    cmd.Option("b|boolean", x => x.Boolean);
+                    cmd.Option("s|string", x => x.String);
+                    cmd.Option("i|integer", x => x.Integer);
+                    cmd.Option("d|double", x => x.Double);
+                    cmd.Option("string-list", x => x.StringList);
+                    cmd.Option("integer-list", x => x.IntegerList);
 
                     return NoOp;
                 });

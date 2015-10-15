@@ -20,23 +20,23 @@ namespace ConsoleApplication3.Tests
 
                 app.AddCommand<Args>("int-list", cmd =>
                 {
-                    cmd.AddArgument("int-list", x => x.PositionalIntegerList);
-                    cmd.AddOption("s|string", x => x.String);
+                    cmd.Argument("int-list", x => x.PositionalIntegerList);
+                    cmd.Option("s|string", x => x.String);
 
                     return NoOp;
                 });
 
                 app.AddCommand<Args>("command", cmd =>
                 {
-                    cmd.AddArgument("positional", x => x.PositionalString);
+                    cmd.Argument("positional", x => x.PositionalString);
 
-                    cmd.AddOption("b|boolean", x => x.Boolean);
-                    cmd.AddOption("f|flag", x => x.Flag);
-                    cmd.AddOption("s|string", x => x.String);
-                    cmd.AddOption("i|integer", x => x.Integer);
-                    cmd.AddOption("d|double", x => x.Double);
-                    cmd.AddOption("string-list", x => x.StringList);
-                    cmd.AddOption("integer-list", x => x.IntegerList);
+                    cmd.Option("b|boolean", x => x.Boolean);
+                    cmd.Option("f|flag", x => x.Flag);
+                    cmd.Option("s|string", x => x.String);
+                    cmd.Option("i|integer", x => x.Integer);
+                    cmd.Option("d|double", x => x.Double);
+                    cmd.Option("string-list", x => x.StringList);
+                    cmd.Option("integer-list", x => x.IntegerList);
 
                     return NoOp;
                 });

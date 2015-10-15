@@ -5,6 +5,6 @@ namespace ConsoleApplication3
 {
     public interface IArgumentRegistry<TArgs, out TBuilder> where TBuilder : IArgumentRegistry<TArgs, TBuilder>
     {
-        TBuilder AddArgument<TProperty>(string name, Expression<Func<TArgs, TProperty>> mapping);
+        TBuilder Argument<TProperty>(string name, Expression<Func<TArgs, TProperty>> mapping);
     }
 }

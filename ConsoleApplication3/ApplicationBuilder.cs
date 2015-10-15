@@ -48,14 +48,14 @@ namespace ConsoleApplication3
             return CommandRegistry.AddCommand(name, build);
         }
 
-        public IApplicationBuilder<TAppArgs, TResult> AddOption<TProperty>(string names, Expression<Func<TAppArgs, TProperty>> mapping)
+        public IApplicationBuilder<TAppArgs, TResult> Option<TProperty>(string names, Expression<Func<TAppArgs, TProperty>> mapping)
         {
-            return OptionRegistry.AddOption(names, mapping);
+            return OptionRegistry.Option(names, mapping);
         }
 
-        public IApplicationBuilder<TAppArgs, TResult> AddArgument<TProperty>(string name, Expression<Func<TAppArgs, TProperty>> mapping)
+        public IApplicationBuilder<TAppArgs, TResult> Argument<TProperty>(string name, Expression<Func<TAppArgs, TProperty>> mapping)
         {
-            return ArgumentRegistry.AddArgument(name, mapping);
+            return ArgumentRegistry.Argument(name, mapping);
         }
 
         public Application<TResult> Build(Func<TAppArgs, TResult> execute)
